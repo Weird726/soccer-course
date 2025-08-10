@@ -3,7 +3,7 @@ extends CharacterBody2D
 #创建一个新的枚举类型
 enum ControlScheme {CPU, P1, P2}
 #为所有不同的状态添加一个枚举
-enum State {MOVING, TACKLING}
+enum State {MOVING, TACKLING, RECOVERING}
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
 @export var control_scheme : ControlScheme
 

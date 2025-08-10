@@ -2,6 +2,8 @@ class_name Players
 extends CharacterBody2D
 #创建一个新的枚举类型
 enum ControlScheme {CPU, P1, P2}
+#为所有不同的状态添加一个枚举
+enum State {MOVING, TACKLING}
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
 @export var control_scheme : ControlScheme
 
@@ -10,33 +12,42 @@ enum ControlScheme {CPU, P1, P2}
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var player_sprite: Sprite2D = %PlayerSprite
 
+#跟踪当前状态的节点
+var current_state: PlayerState = null
+#引用玩家工厂状态,实例化一次就行
+var state_factory := PlayerStateFactory.new()
+#准备函数
+func _ready() -> void:
+	#将状态且黄岛.moving
+	switch_state(State.MOVING)
+
 #私有变量存储玩家面向的方向
 var heading := Vector2.RIGHT
 
 #函数后面下划线可以消除警告
 func _process(_delta: float) -> void:
-	#检测是我们控制玩家还是CPU控制玩家（AI处理）
-	if control_scheme == ControlScheme.CPU:
-		pass #这里是AI处理逻辑预留
-	else:
-		#包含角色移动方向等的方法
-		handle_human_movement()
-	
-	#创建一个set_movement_animation()方法来重构代码
-	set_movemont_animation()
-	#判断人物动画方向方法
-	set_heading()
 	#调用方向判断后改变动画H属性的方法
 	flip_sprites()
 	#调用CharacterBody2D的方法来实现移动，这个方法是move_and_slide()
 	move_and_slide()
 
-func handle_human_movement() -> void:
-		#针对Player 1 的控制方向代码
-	var direction := KeyUtils.get_input_vector(control_scheme)
-	# 方向 * 速度 = 调整的速度 velocity 是以每秒像素为单位的
-	velocity = direction * speed
-
+#切换状态的方法
+func switch_state(state: State) -> void:
+	#首先判断现有状态是否需要要进行销毁（存在即销毁）
+	if current_state != null:
+		#执行从树中移除的操作
+		current_state.queue_free()
+	#创建一个新状态，从状态工厂获取它并传入状态
+	current_state = state_factory.get_fresh_state(state)
+	#进行设置两个参数“玩家”与“动画机状态”
+	current_state.setup(self, animation_player)
+	#添加节点前先连接到信号，要绑定状态方法
+	current_state.state_transition_requested.connect(switch_state.bind())
+	#给节点起个特殊的名称，称之为玩家状态机,以字符串形式添加名称
+	current_state.name = "PlayerStateMachine: " + str(state)
+	#将该节点添加为子对象
+	call_deferred("add_child", current_state)
+	
 func set_movemont_animation() -> void:
 	#用速度来控制动画状态
 	#如果速度大于0，播放跑步动画，如果速度小于0，播放闲置动画

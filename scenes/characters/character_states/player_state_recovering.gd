@@ -20,4 +20,4 @@ func _process(_delta: float)-> void:
 	#如果当前的时间戳 减去 开始回复的时间戳 大于 回复的持续时间
 	if Time.get_ticks_msec() - time_start_recovery > DURATION_RECOVERY:
 		#转换状态，进入移动状态
-		state_transition_requested.emit(Players.State.RECOVERING)
+		state_transition_requested.emit(Players.State.MOVING)

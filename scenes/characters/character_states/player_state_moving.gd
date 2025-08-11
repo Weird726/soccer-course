@@ -6,7 +6,7 @@ extends PlayerState
 
 func _process(_delta: float) -> void:
 	#检测是我们控制玩家还是CPU控制玩家（AI处理）
-	if player.control_scheme == Players.ControlScheme.CPU:
+	if player.control_scheme == Player.ControlScheme.CPU:
 		pass #这里是AI处理逻辑预留
 	else:
 		#包含角色移动方向等的方法
@@ -24,4 +24,4 @@ func handle_human_movement() -> void:
 	#判断玩家的速度是否与向量零不同，并且调用KeyUtils的is_action_just_pressed（）的方法，一个判断值判断是否过度到铲球状态
 	if player.velocity != Vector2.ZERO and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
 		#发动信号并携带铲球的参数
-		state_transition_requested.emit(Players.State.TACKLING)
+		state_transition_requested.emit(Player.State.TACKLING)

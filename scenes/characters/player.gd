@@ -1,4 +1,4 @@
-class_name Players
+class_name Player
 extends CharacterBody2D
 #创建一个新的枚举类型
 enum ControlScheme {CPU, P1, P2}

@@ -31,4 +31,4 @@ func _process(delta: float) -> void:
 			#检查是否在这个状态停留了足够的时间
 		elif Time.get_ticks_msec() - time_finish_tackle > DURATION_PRIOR_RECOVERY:
 			#如果是就会转换到玩家的移动状态
-			state_transition_requested.emit(Players.State.RECOVERING)
+			state_transition_requested.emit(Player.State.RECOVERING)

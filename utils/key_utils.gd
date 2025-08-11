@@ -42,5 +42,5 @@ func is_action_just_pressed(scheme: Player.ControlScheme, action: Action) -> boo
 	return Input.is_action_just_pressed(ACTIONS_MAP[scheme][action])
 
 #对isActionJustReleased做同样处理
-func is_Action_Just_Released(scheme: Player.ControlScheme,action: Action) -> bool:
+func is_action_just_released(scheme: Player.ControlScheme,action: Action) -> bool:
 	return Input.is_action_just_released(ACTIONS_MAP[scheme][action])

@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://07m0iibryhtg"]
 
 [ext_resource type="Texture2D" uid="uid://c7ur8skn4f8du" path="res://assets/art/props/soccer-ball.png" id="1_oqv3d"]
-[ext_resource type="Script" uid="uid://ch73uksc85uh2" path="res://scenes/ball/ball.gd" id="1_stoaj"]
+[ext_resource type="Script" uid="uid://ch73uksc85uh2" path="res://scenes/ball/ball_states/ball.gd" id="1_stoaj"]
 [ext_resource type="Texture2D" uid="uid://drg7rclbnujif" path="res://assets/art/props/ball-shadow.png" id="2_nv6q1"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_oqv3d"]

@@ -6,7 +6,7 @@ var states : Dictionary
 
 #它将包含不同状态需要实例化的类
 func _init() -> void:
-	states ={
+	states = {
 		Ball.State.CARRIED: BallStateCarried,
 		Ball.State.FREEFORM: BallStateFreeform,
 		Ball.State.SHOT: BallStateShot,

@@ -106,7 +106,6 @@ height = 18.0
 platform_floor_layers = 2
 platform_wall_layers = 1
 script = ExtResource("1_yewv4")
-control_scheme = null
 speed = 80.0
 
 [node name="PlayerSprite" type="Sprite2D" parent="."]

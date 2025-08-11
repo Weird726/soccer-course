@@ -7,7 +7,7 @@ func _enter_tree() -> void:
 	player_detection_area.body_entered.connect(on_player_enter.bind())
 
 #创建绑定的方法，接收一个玩家参数
-func on_player_enter(body: Player) -> void:
+func on_player_enter(body : Player) -> void:
 	#从被携带状态转换属性
 	ball.carrier = body
 	#切换到被携带状态

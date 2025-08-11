@@ -3,10 +3,13 @@ extends CharacterBody2D
 #创建一个新的枚举类型
 enum ControlScheme {CPU, P1, P2}
 #为所有不同的状态添加一个枚举
-enum State {MOVING, TACKLING, RECOVERING}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING}
+#设置一个来自球的变量
+@export var ball : Ball
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
 @export var control_scheme : ControlScheme
-
+#功率属性初始值变量
+@export var power : float
 @export var speed : float
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
@@ -69,3 +72,8 @@ func flip_sprites() -> void:
 		player_sprite.flip_h = false
 	elif heading == Vector2.LEFT:
 		player_sprite.flip_h = true
+
+#设置一个检查当前是否持有球的方法
+func has_ball() -> bool:
+	#返回携带球的玩家是否是当前玩家
+	return ball.carrier == self

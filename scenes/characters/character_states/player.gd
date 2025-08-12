@@ -34,16 +34,16 @@ func _process(_delta: float) -> void:
 	#调用CharacterBody2D的方法来实现移动，这个方法是move_and_slide()
 	move_and_slide()
 
-#切换状态的方法
-func switch_state(state: State) -> void:
+#切换状态的方法(默认情况下让DATA处于一个空实例）
+func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.new()) -> void:
 	#首先判断现有状态是否需要要进行销毁（存在即销毁）
 	if current_state != null:
 		#执行从树中移除的操作
 		current_state.queue_free()
 	#创建一个新状态，从状态工厂获取它并传入状态
 	current_state = state_factory.get_fresh_state(state)
-	#进行设置两个参数“玩家”与“动画机状态”
-	current_state.setup(self, animation_player)
+	#进行设置两个参数“玩家”与“动画机状态”(主对象)
+	current_state.setup(self, state_data, animation_player, ball)
 	#添加节点前先连接到信号，要绑定状态方法
 	current_state.state_transition_requested.connect(switch_state.bind())
 	#给节点起个特殊的名称，称之为玩家状态机,以字符串形式添加名称
@@ -77,3 +77,10 @@ func flip_sprites() -> void:
 func has_ball() -> bool:
 	#返回携带球的玩家是否是当前玩家
 	return ball.carrier == self
+
+#创建一个回调方法
+func on_animation_complete() -> void:
+	#判断玩家数据是否为空
+	if current_state != null:
+		#如果不为空处理动画完成状态
+		current_state.on_animation_complete()

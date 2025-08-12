@@ -36,7 +36,11 @@ func _process(delta: float) -> void:
 		var shot_power := player.power * (1 + bonus)
 		#将变量归一化处理
 		shot_direction = shot_direction.normalized()
-		#打印出这两个变量
-		print(shot_power, shot_direction)
-		
-		
+		#创建过渡对象，传递参数
+		#var state_data := PlayerStateData.new()
+		#state_data.shot_power = shot_power
+		#state_data.shot_direction = shot_direction
+		#使用构建来创建对象(构建器模式的伟大之处)一行完成一切
+		var data = PlayerStateData.build().set_shot_power(shot_power).set_shot_direction(shot_direction)
+		#预备射门状态发送状态信号，切换到射门状态(额外添加了射门力量和射门方向）
+		transition_state(Player.State.SHOOTING,state_data)

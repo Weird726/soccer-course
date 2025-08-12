@@ -14,9 +14,11 @@ var ball : Ball = null
 var carrier : Player = null
 #创建一个变量,初始值为空
 var player_detection_area : Area2D = null
+#创建一个变量，球自身精灵贴图
+var sprite : Sprite2D = null
 
 #设置一个方法来设置这些状态,添加Area2d后所有的状态逻辑都能访问它
-func setup(context_ball : Ball, context_player_detection_area : Area2D, context_carrier : Player, context_animation_player : AnimationPlayer) -> void:
+func setup(context_ball : Ball, context_player_detection_area : Area2D, context_carrier : Player, context_animation_player : AnimationPlayer, context_sprite : Sprite2D) -> void:
 	#设置Ball对象
 	ball = context_ball
 	#设置赋值检测区域
@@ -25,3 +27,5 @@ func setup(context_ball : Ball, context_player_detection_area : Area2D, context_
 	carrier = context_carrier
 	#传递动画复制引用对象
 	animation_player = context_animation_player
+	#传递图片精灵引用对象
+	sprite = context_sprite

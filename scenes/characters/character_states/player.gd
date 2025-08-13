@@ -3,7 +3,7 @@ extends CharacterBody2D
 #创建一个新的枚举类型
 enum ControlScheme {CPU, P1, P2}
 #为所有不同的状态添加一个枚举
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING}
 #设置一个来自球的变量
 @export var ball : Ball
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
@@ -14,6 +14,7 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING}
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var player_sprite: Sprite2D = %PlayerSprite
+@onready var teammate_detection_area: Area2D = %TeammateDetectionArea
 
 #跟踪当前状态的节点
 var current_state: PlayerState = null
@@ -43,7 +44,7 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 	#创建一个新状态，从状态工厂获取它并传入状态
 	current_state = state_factory.get_fresh_state(state)
 	#进行设置两个参数“玩家”与“动画机状态”(主对象)
-	current_state.setup(self, state_data, animation_player, ball)
+	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area)
 	#添加节点前先连接到信号，要绑定状态方法
 	current_state.state_transition_requested.connect(switch_state.bind())
 	#给节点起个特殊的名称，称之为玩家状态机,以字符串形式添加名称

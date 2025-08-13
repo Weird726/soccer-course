@@ -13,10 +13,12 @@ var ball : Ball = null
 var player : Player = null
 #存放状态数据的变量(创建一个实例）
 var state_data : PlayerStateData = PlayerStateData.new()
+#队友检测区域
+var teammate_detection_area : Area2D = null
 
 #创建一个方法来设置这些状态节点,传入上下文玩家
 #将动画播放器作为属性的一部分进行传递
-func setup(context_player: Player, context_data : PlayerStateData,context_animation_player: AnimationPlayer, context_ball: Ball) -> void:
+func setup(context_player: Player, context_data : PlayerStateData,context_animation_player: AnimationPlayer, context_ball: Ball, context_teammate_detection_area: Area2D) -> void:
 	player = context_player
 	#设置正确的值
 	animation_player = context_animation_player
@@ -24,6 +26,8 @@ func setup(context_player: Player, context_data : PlayerStateData,context_animat
 	state_data = context_data
 	#设置正确的值
 	ball = context_ball
+	#设置正确的检测区域的值
+	teammate_detection_area = context_teammate_detection_area
 
 #创建一个过渡状态方法,并传递参数(.new（）是设置为新实例）
 func transition_state(new_state: Player.State, data: PlayerStateData = PlayerStateData.new()) -> void:

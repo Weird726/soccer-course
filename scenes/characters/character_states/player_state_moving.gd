@@ -21,10 +21,21 @@ func handle_human_movement() -> void:
 	var direction := KeyUtils.get_input_vector(player.control_scheme)
 	# 方向 * 速度 = 调整的速度 velocity 是以每秒像素为单位的
 	player.velocity = direction * player.speed
-	#判断玩家是否持球,且刚按下射门键
+	#判断如果玩家的速度不为0
+	if player.velocity != Vector2.ZERO:
+		#它们按下了一个方向,旋转视野锥体
+		teammate_detection_area.rotation = player.velocity.angle()
+		
+	#判断玩家是否持球,且刚按下传球键
+	if player.has_ball() and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.PASS):
+		#过渡到预设门状态
+		transition_state(Player.State.PASSING)
+		
+			#判断玩家是否持球,且刚按下射门键
 	if player.has_ball() and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
 		#过渡到预设门状态
 		transition_state(Player.State.PREPPING_SHOT)
+		
 	#判断玩家的速度是否与向量零不同，并且调用KeyUtils的is_action_just_pressed（）的方法，一个判断值判断是否过度到铲球状态
 	#if player.velocity != Vector2.ZERO and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
 	#	#发动信号并携带铲球的参数

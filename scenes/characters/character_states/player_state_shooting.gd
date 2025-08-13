@@ -19,6 +19,7 @@ func on_animation_complete() -> void:
 
 #射击方法创建
 func shoot_ball() -> void:
+	
 	#开始召唤我们的球,传递状态数据
 	ball.shoot(state_data.shot_direction * state_data.shot_power)
 	

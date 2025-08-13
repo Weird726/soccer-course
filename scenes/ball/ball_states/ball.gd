@@ -13,6 +13,8 @@ var carrier : Player = null
 var current_state : BallState = null
 #创建一个高度属性
 var height := 0.0
+#新属性高度速度
+var height_velocity := 0.0
 #引用状态工厂
 var state_factory := BallStateFactory.new()
 #私有的速度变量
@@ -24,7 +26,7 @@ func _ready() -> void:
 	switch_state(State.FREEFORM)
 
 #查看在哪里访问球体精灵的方法
-func _process(_delta: float) -> void:
+func _process(_sadelta: float) -> void:
 	ball_sprite.position = Vector2.UP * height
 
 #创建一个方法用来切换状态
@@ -52,5 +54,4 @@ func shoot (shot_velocity : Vector2) -> void:
 	carrier = null
 	#切换状态
 	switch_state(Ball.State.SHOT)
-	
 	

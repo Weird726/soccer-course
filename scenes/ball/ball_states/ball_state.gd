@@ -2,6 +2,8 @@
 #并且所有状态的逻辑都能改变球的属性
 class_name BallState
 extends Node
+#重力常数
+const GRAVITY := 10.0
 
 #设置一个信号来转换状态
 signal state_transition_requested(new_state: BallState)
@@ -29,3 +31,39 @@ func setup(context_ball : Ball, context_player_detection_area : Area2D, context_
 	animation_player = context_animation_player
 	#传递图片精灵引用对象
 	sprite = context_sprite
+
+func set_ball_animation_from_velocity() -> void:
+		#判断球的速度是否为0
+	if ball.velocity == Vector2.ZERO:
+		#播放闲置动画
+		animation_player.play("idle")
+	#否则判断是否朝右移动
+	elif ball.velocity.x > 0:
+		animation_player.play("roll")
+		#强制推进动画播放器，防止卡住
+		animation_player.advance(0)
+	else:
+		#否则向后播放
+		animation_player.play_backwards("roll")
+		#强制推进动画播放器，防止卡住
+		animation_player.advance(0)
+
+#模拟重力过程的方法
+func process_gravity(delta: float, bounciness: float = 0.0) -> void:
+	#判断球是否在高空,或者球的高度大于0时，球就在向上运动
+	if ball.height > 0 or ball.height_velocity > 0:
+		#球的高度以及高度速度会受到速度的影响
+		ball.height_velocity -= GRAVITY * delta
+		#添加速度和高度速度
+		ball.height += ball.height_velocity
+		#判断球的高度防止穿过地面
+		if ball.height < 0:
+			#如果球在地面将暂时保持在地面上
+			ball.height = 0
+			#检查是否有弹跳因子,同时检查是否进入了地面
+			if bounciness > 0 and ball.height_velocity < 0:
+				#回复这个高度速度（从而实现弹跳效果
+				ball.height_velocity = -ball.height_velocity * bounciness
+				#球的速度 = 球的速度 * 弹跳因子(这种写法也是可行的）
+				ball.velocity *= bounciness
+				

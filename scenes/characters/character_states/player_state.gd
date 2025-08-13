@@ -27,7 +27,7 @@ func setup(context_player: Player, context_data : PlayerStateData,context_animat
 
 #创建一个过渡状态方法,并传递参数(.new（）是设置为新实例）
 func transition_state(new_state: Player.State, data: PlayerStateData = PlayerStateData.new()) -> void:
-	state_transition_requested.emit(new_state, state_data)
+	state_transition_requested.emit(new_state, data)
 	
 #创建一个回调方法
 func on_animation_complete() -> void:

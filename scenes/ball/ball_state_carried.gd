@@ -37,5 +37,7 @@ func _process(delta: float) -> void:
 			animation_player.advance(0)
 	else:
 		animation_player.play("idle")
+		#处理重力的
+		process_gravity(delta)
 	#设置为携带者的位置,增加一个偏移量
 	ball.position = carrier.position + Vector2(vx + carrier.heading.x * OFFSET_FROM_PLAYER.x, OFFSET_FROM_PLAYER.y)

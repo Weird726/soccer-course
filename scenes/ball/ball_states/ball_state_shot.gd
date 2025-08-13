@@ -4,7 +4,7 @@ extends BallState
 #设置一个持续时间的常量
 const DURATION_SHOT := 1000
 #创建一个射击高度常量
-const SHOT_HEIGHT := 5
+const SHOT_HEIGHT := 30
 #精灵缩放常量设置
 const SHOT_SPRITE_SCALE := 0.8
 
@@ -13,17 +13,8 @@ var time_since_shot := Time.get_ticks_msec()
 
 #老规矩，进状态先播放动画
 func _enter_tree() -> void:
-	#判断球是否朝右飞去
-	if  ball.velocity.x >= 0:
-		#继续播放滚动动画
-		animation_player.play("roll")
-		#强制动画帧向前推动一帧
-		animation_player.advance(0)
-	else:
-		#否则就倒着滚(动画翻转）
-		animation_player.play_backwards("roll")
-		#强制动画帧向前推动一帧
-		animation_player.advance(0)
+	#动画状态反转判断函数
+	set_ball_animation_from_velocity()
 	#Y轴缩放 = 射门精灵缩放比
 	sprite.scale.y = SHOT_SPRITE_SCALE
 	#赋值，使球的高度等于射门的高度

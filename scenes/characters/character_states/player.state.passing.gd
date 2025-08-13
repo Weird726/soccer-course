@@ -29,6 +29,4 @@ func find_teammate_in_view() -> Player:
 	#如果队友数组的大小 > 0 我们就返回第一个对象
 	if teammates_in_view.size() > 0:
 		return teammates_in_view[0]
-		return null
-		
-	
+	return null

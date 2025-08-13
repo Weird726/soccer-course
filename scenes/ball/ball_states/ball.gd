@@ -4,6 +4,11 @@ extends AnimatableBody2D
 #为状态定义一个枚举 “携带状态”，“自由状态”，“发射状态”
 enum State {CARRIED, FREEFORM, SHOT}
 
+#定义一个摩擦力中的空气为浮点数
+@export var friction_air : float
+#定义一个地面摩擦力为浮点数
+@export var friction_ground : float
+
 @onready var animation_player: AnimationPlayer = %AnimationPlayer
 @onready var ball_sprite: Sprite2D = %BallSprite
 @onready var player_dectection_area: Area2D = %PlayerDectectionArea
@@ -55,3 +60,13 @@ func shoot (shot_velocity : Vector2) -> void:
 	#切换状态
 	switch_state(Ball.State.SHOT)
 	
+#设置一个速度方法，不会返回任何内容的向量
+func pass_to(destination: Vector2) -> void:
+	#传入两个摩擦力
+	var direction := position.direction_to(destination)
+	var distance := position.distance_to(destination)
+	var intensity := sqrt(2 * distance * friction_ground)
+	#强度*方向向量
+	velocity = intensity * direction
+	carrier = null
+	switch_state(Ball.State.FREEFORM)

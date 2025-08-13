@@ -12,6 +12,10 @@ func on_animation_complete() -> void:
 	#寻找传球的目标
 	var pass_target := find_teammate_in_view()
 	print(pass_target)
+	#传入一个目标向量
+	var target := Vector2(10, 10)
+	#调用pass_to来使用这个方向向量,然后传入上面的速度
+	ball.pass_to(target)
 	transition_state(Player.State.MOVING)
 
 #创建返回一个玩家的方法

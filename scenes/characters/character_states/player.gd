@@ -1,5 +1,13 @@
 class_name Player
 extends CharacterBody2D
+
+#创建一个字典，各种模式方案
+const CONTROL_SCHEME_MAP : Dictionary = {
+	ControlScheme.CPU: preload("res://assets/art/props/cpu.png"),
+	ControlScheme.P1: preload("res://assets/art/props/1p.png"),
+	ControlScheme.P2: preload("res://assets/art/props/2p.png"),
+}
+
 #创建一个新的枚举类型
 enum ControlScheme {CPU, P1, P2}
 #为所有不同的状态添加一个枚举
@@ -13,6 +21,7 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING}
 @export var speed : float
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var control_sprite: Sprite2D = %ControlSprite
 @onready var player_sprite: Sprite2D = %PlayerSprite
 @onready var teammate_detection_area: Area2D = %TeammateDetectionArea
 
@@ -22,6 +31,8 @@ var current_state: PlayerState = null
 var state_factory := PlayerStateFactory.new()
 #准备函数
 func _ready() -> void:
+	#调用设置图片方法
+	set_control_texture()
 	#将状态且黄岛.moving
 	switch_state(State.MOVING)
 
@@ -32,6 +43,8 @@ var heading := Vector2.RIGHT
 func _process(_delta: float) -> void:
 	#调用方向判断后改变动画H属性的方法
 	flip_sprites()
+	#设置精灵的可见性
+	set_sprite_visibility()
 	#调用CharacterBody2D的方法来实现移动，这个方法是move_and_slide()
 	move_and_slide()
 
@@ -74,10 +87,18 @@ func flip_sprites() -> void:
 	elif heading == Vector2.LEFT:
 		player_sprite.flip_h = true
 
+#翻转精灵方法.可见或者不可见
+func set_sprite_visibility() -> void:
+	control_sprite.visible = has_ball() or not control_scheme == ControlScheme.CPU
+
 #设置一个检查当前是否持有球的方法
 func has_ball() -> bool:
 	#返回携带球的玩家是否是当前玩家
 	return ball.carrier == self
+
+#用于设置正确的纹理方法
+func set_control_texture() -> void:
+	control_sprite.texture = CONTROL_SCHEME_MAP[control_scheme]
 
 #创建一个回调方法
 func on_animation_complete() -> void:

@@ -17,6 +17,8 @@ func _enter_tree() -> void:
 	player.velocity = Vector2.ZERO
 	#设置这个值（最好时机）
 	time_start_shot = Time.get_ticks_msec()
+	#初始化为玩家的方向
+	shot_direction = player.heading
 
 #处理过程
 func _process(delta: float) -> void:

@@ -1,12 +1,22 @@
-[gd_scene load_steps=6 format=3 uid="uid://7jbgcr2oupf7"]
+[gd_scene load_steps=7 format=3 uid="uid://7jbgcr2oupf7"]
 
 [ext_resource type="Texture2D" uid="uid://bwmp24maynhet" path="res://assets/art/backgrounds/pitch-background.png" id="1_nnsk1"]
+[ext_resource type="Script" uid="uid://cr42l37ctxcer" path="res://scenes/camera.gd" id="1_qfnet"]
 [ext_resource type="Texture2D" uid="uid://bhiusq0losvbh" path="res://assets/art/backgrounds/pitch-pattern.png" id="2_rwgxs"]
 [ext_resource type="Texture2D" uid="uid://dhiylb05i870k" path="res://assets/art/backgrounds/pitch-lines.png" id="3_4wyf3"]
 [ext_resource type="PackedScene" uid="uid://bvmfhrxynl7ui" path="res://scenes/characters/player.tscn" id="4_k0juu"]
 [ext_resource type="PackedScene" uid="uid://07m0iibryhtg" path="res://scenes/ball/ball.tscn" id="5_71j4m"]
 
 [node name="World" type="Node2D"]
+
+[node name="Camera" type="Camera2D" parent="." node_paths=PackedStringArray("ball")]
+limit_left = 0
+limit_top = 0
+limit_right = 850
+limit_bottom = 360
+position_smoothing_enabled = true
+script = ExtResource("1_qfnet")
+ball = NodePath("../ActorsContainer/Ball")
 
 [node name="Backgrounds" type="Node2D" parent="."]
 

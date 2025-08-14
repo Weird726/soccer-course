@@ -3,10 +3,16 @@ extends AnimatableBody2D
 
 #常量，弹跳因子
 const BOUNCINESS := 0.8
+#距离高度阈值
+const DISTANCE_HIGH_PASS := 130
 
 #为状态定义一个枚举 “携带状态”，“自由状态”，“发射状态”
 enum State {CARRIED, FREEFORM, SHOT}
 
+#导出变量 空气连接最小高度
+@export var air_connect_min_height : float
+#导出变量 空气连接最大高度
+@export var air_connect_max_height : float
 #定义一个摩擦力中的空气为浮点数
 @export var friction_air : float
 #定义一个地面摩擦力为浮点数
@@ -62,7 +68,8 @@ func shoot (shot_velocity : Vector2) -> void:
 	carrier = null
 	#切换状态
 	switch_state(Ball.State.SHOT)
-	
+
+
 #设置一个速度方法，不会返回任何内容的向量
 func pass_to(destination: Vector2) -> void:
 	#传入两个摩擦力
@@ -71,10 +78,23 @@ func pass_to(destination: Vector2) -> void:
 	var intensity := sqrt(2 * distance * friction_ground)
 	#强度*方向向量
 	velocity = intensity * direction
+	#判断我们的距离是否大于阈值
+	if distance > DISTANCE_HIGH_PASS:
+		height_velocity = BallState.GRAVITY * distance / (1.8 * intensity)
 	carrier = null
 	switch_state(Ball.State.FREEFORM)
-	
+
 #创建一个停止的方法
 func stop() -> void:
 	#将速度设置为0
 	velocity = Vector2.ZERO
+
+#创建一个空气是否存在交互的方法
+func can_air_interact() -> bool:
+	#直接返回当前状态提供的信息
+	return current_state != null and current_state.can_air_interact()
+
+#是否能进行空中连接
+func can_air_connect() -> bool:
+	#球的当前高度是否在该区间内
+	return height >= air_connect_min_height and height <= air_connect_max_height

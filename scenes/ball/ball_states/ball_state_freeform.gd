@@ -25,3 +25,6 @@ func _process(delta: float) -> void:
 	process_gravity(delta, ball.BOUNCINESS)
 	#PhysicsBody2D提供的移动和碰撞方法，速度 * 每秒增量 = 像素每秒为单位的速度
 	move_and_bounce(delta)
+
+func can_air_interact() -> bool:
+	return true

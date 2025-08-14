@@ -77,4 +77,7 @@ func move_and_bounce(delta: float) -> void:
 		ball.velocity = ball.velocity.bounce(collision.get_normal()) * ball.BOUNCINESS
 		#防止效果成为强力射出，所以切换为自由状态
 		ball.switch_state(Ball.State.FREEFORM)
-		
+
+#创建这个空气交互方法
+func can_air_interact() -> bool:
+	return false

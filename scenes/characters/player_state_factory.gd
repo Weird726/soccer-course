@@ -7,12 +7,15 @@ var states : Dictionary
 #初始化字典，状态名，值就是各个类
 func _init() -> void:
 	states = {
+		Player.State.BLCYCLE_KICK:PlayerStateBicycleKick,
 		Player.State.MOVING:PlayerStateMoving,
 		Player.State.PASSING:PlayerStatePassing,
 		Player.State.PREPPING_SHOT:PlayerStatePreppingShot,
 		Player.State.RECOVERING:PlayerStateRecovering,
 		Player.State.SHOOTING:PlayerStateShooting,
 		Player.State.TACKLING:PlayerStateTackling,
+		Player.State.VOLLEY_KICK:PlayerStateVolleyKick,
+		Player.State.HEADER:PlayerStateHeader,
 	}
 
 #获取新状态的方法，并返回一个玩家状态的实例

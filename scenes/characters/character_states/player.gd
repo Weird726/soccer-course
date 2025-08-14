@@ -7,11 +7,13 @@ const CONTROL_SCHEME_MAP : Dictionary = {
 	ControlScheme.P1: preload("res://assets/art/props/1p.png"),
 	ControlScheme.P2: preload("res://assets/art/props/2p.png"),
 }
+#重力常量
+const GRAVITY := 8.0
 
 #创建一个新的枚举类型
 enum ControlScheme {CPU, P1, P2}
 #为所有不同的状态添加一个枚举
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, VOLLEY_KICK, HEADER, BLCYCLE_KICK}
 #设置一个来自球的变量
 @export var ball : Ball
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
@@ -21,6 +23,7 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING}
 @export var speed : float
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var ball_detection_area: Area2D = %BallDetectionArea
 @onready var control_sprite: Sprite2D = %ControlSprite
 @onready var player_sprite: Sprite2D = %PlayerSprite
 @onready var teammate_detection_area: Area2D = %TeammateDetectionArea
@@ -29,6 +32,10 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING}
 var current_state: PlayerState = null
 #引用玩家工厂状态,实例化一次就行
 var state_factory := PlayerStateFactory.new()
+#添加一个高度变量
+var height := 0.0
+#添加一个高度向量变量
+var height_velocity := 0.0
 #准备函数
 func _ready() -> void:
 	#调用设置图片方法
@@ -40,11 +47,13 @@ func _ready() -> void:
 var heading := Vector2.RIGHT
 
 #函数后面下划线可以消除警告
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	#调用方向判断后改变动画H属性的方法
 	flip_sprites()
 	#设置精灵的可见性
 	set_sprite_visibility()
+	#处理重力
+	process_gravity(delta)
 	#调用CharacterBody2D的方法来实现移动，这个方法是move_and_slide()
 	move_and_slide()
 
@@ -57,7 +66,7 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 	#创建一个新状态，从状态工厂获取它并传入状态
 	current_state = state_factory.get_fresh_state(state)
 	#进行设置两个参数“玩家”与“动画机状态”(主对象)
-	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area)
+	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area)
 	#添加节点前先连接到信号，要绑定状态方法
 	current_state.state_transition_requested.connect(switch_state.bind())
 	#给节点起个特殊的名称，称之为玩家状态机,以字符串形式添加名称
@@ -73,6 +82,21 @@ func set_movemont_animation() -> void:
 	else:
 		animation_player.play("idel")
 
+#处理重力的方法
+func process_gravity(delta: float) -> void:
+	#判断高度是否为正数
+	if height > 0:
+		#让最后一帧独立了
+		height_velocity -= GRAVITY * delta
+		#影响高度
+		height += height_velocity
+		#确保不会穿过地面
+		if height <= 0:
+			#高度重新设为0
+			height = 0
+		#定位玩家时体现出高度
+		player_sprite.position = Vector2.UP * height
+		
 #设置一个速度向量判断方向的方法
 func set_heading() -> void:
 	if velocity.x > 0:

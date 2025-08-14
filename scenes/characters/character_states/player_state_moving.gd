@@ -27,15 +27,23 @@ func handle_human_movement() -> void:
 		teammate_detection_area.rotation = player.velocity.angle()
 		
 	#判断玩家是否持球,且刚按下传球键
-	if player.has_ball() and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.PASS):
-		#过渡到预设门状态
-		transition_state(Player.State.PASSING)
-		
-			#判断玩家是否持球,且刚按下射门键
-	if player.has_ball() and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
-		#过渡到预设门状态
-		transition_state(Player.State.PREPPING_SHOT)
-		
+	if player.has_ball() :
+		if KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.PASS):
+			#过渡到预设门状态
+			transition_state(Player.State.PASSING)
+		#判断玩家是否持球,且刚按下射门键
+		elif KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
+			#过渡到预设门状态
+			transition_state(Player.State.PREPPING_SHOT)
+	#球体本身创造一个方法进行询问，你属于什么状态(判断是你是否是空中交互状态）
+	elif ball.can_air_interact() and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
+		#判断玩家的速度是否为0
+		if player.velocity == Vector2.ZERO:
+			pass
+		else:
+			#切换到头球状态
+			transition_state(Player.State.HEADER)
+	
 	#判断玩家的速度是否与向量零不同，并且调用KeyUtils的is_action_just_pressed（）的方法，一个判断值判断是否过度到铲球状态
 	#if player.velocity != Vector2.ZERO and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
 	#	#发动信号并携带铲球的参数

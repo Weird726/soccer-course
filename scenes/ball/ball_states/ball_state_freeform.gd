@@ -1,10 +1,6 @@
 class_name BallStateFreeform
 extends BallState
 
-#常量，弹跳因子
-const BOUNCINESS := 0.8
-
-
 #检测玩家是否重叠的方法
 func _enter_tree() -> void:
 	#连接到这个信号,并绑定它
@@ -26,6 +22,6 @@ func _process(delta: float) -> void:
 	#球的速度以时间间隔逐渐减小到零
 	ball.velocity = ball.velocity.move_toward(Vector2.ZERO, friction * delta)
 	#处理重力并传入增量（因用一个弹跳因子）
-	process_gravity(delta, BOUNCINESS)
+	process_gravity(delta, ball.BOUNCINESS)
 	#PhysicsBody2D提供的移动和碰撞方法，速度 * 每秒增量 = 像素每秒为单位的速度
-	ball.move_and_collide((ball.velocity * delta))
+	move_and_bounce(delta)

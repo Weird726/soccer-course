@@ -66,4 +66,15 @@ func process_gravity(delta: float, bounciness: float = 0.0) -> void:
 				ball.height_velocity = -ball.height_velocity * bounciness
 				#球的速度 = 球的速度 * 弹跳因子(这种写法也是可行的）
 				ball.velocity *= bounciness
-				
+
+#移动并弹跳方法
+func move_and_bounce(delta: float) -> void:
+	#调用这个碰撞方法
+	var collision := ball.move_and_collide(ball.velocity * delta)
+	#判断是否确实发生了碰撞
+	if collision != null:
+		#让球反弹,调整球的速度（这个bounce的用法需要指定法线)
+		ball.velocity = ball.velocity.bounce(collision.get_normal()) * ball.BOUNCINESS
+		#防止效果成为强力射出，所以切换为自由状态
+		ball.switch_state(Ball.State.FREEFORM)
+		

@@ -4,7 +4,7 @@ extends BallState
 #设置一个持续时间的常量
 const DURATION_SHOT := 1000
 #创建一个射击高度常量
-const SHOT_HEIGHT := 30
+const SHOT_HEIGHT := 5
 #精灵缩放常量设置
 const SHOT_SPRITE_SCALE := 0.8
 
@@ -29,7 +29,7 @@ func _process(delta: float) -> void:
 		state_transition_requested.emit(Ball.State.FREEFORM)
 	else:
 		#运动计算用调用move_and_collide方法来计算，并保持物理为关闭状态
-		ball.move_and_collide(ball.velocity * delta)
+		move_and_bounce(delta)
 
 #退出树该状态
 func _exit_tree() -> void:

@@ -1,6 +1,9 @@
 class_name Ball
 extends AnimatableBody2D
 
+#常量，弹跳因子
+const BOUNCINESS := 0.8
+
 #为状态定义一个枚举 “携带状态”，“自由状态”，“发射状态”
 enum State {CARRIED, FREEFORM, SHOT}
 
@@ -70,3 +73,8 @@ func pass_to(destination: Vector2) -> void:
 	velocity = intensity * direction
 	carrier = null
 	switch_state(Ball.State.FREEFORM)
+	
+#创建一个停止的方法
+func stop() -> void:
+	#将速度设置为0
+	velocity = Vector2.ZERO

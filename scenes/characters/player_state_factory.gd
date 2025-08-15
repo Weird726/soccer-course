@@ -8,6 +8,7 @@ var states : Dictionary
 func _init() -> void:
 	states = {
 		Player.State.BLCYCLE_KICK:PlayerStateBicycleKick,
+		Player.State.CHEST_CONTROL:PlayerStateChestControl,
 		Player.State.MOVING:PlayerStateMoving,
 		Player.State.PASSING:PlayerStatePassing,
 		Player.State.PREPPING_SHOT:PlayerStatePreppingShot,

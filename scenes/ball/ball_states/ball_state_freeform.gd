@@ -10,6 +10,7 @@ func _enter_tree() -> void:
 func on_player_enter(body : Player) -> void:
 	#从被携带状态转换属性
 	ball.carrier = body
+	body.control_ball()
 	#切换到被携带状态
 	state_transition_requested.emit(Ball.State.CARRIED)
 

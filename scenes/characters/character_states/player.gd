@@ -1,6 +1,8 @@
 class_name Player
 extends CharacterBody2D
 
+#创建一个常量
+const BALL_CONTROL_HEIGHT_MAX := 10.0
 #创建一个字典，各种模式方案
 const CONTROL_SCHEME_MAP : Dictionary = {
 	ControlScheme.CPU: preload("res://assets/art/props/cpu.png"),
@@ -13,7 +15,7 @@ const GRAVITY := 8.0
 #创建一个新的枚举类型
 enum ControlScheme {CPU, P1, P2}
 #为所有不同的状态添加一个枚举
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, VOLLEY_KICK, HEADER, BLCYCLE_KICK}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, VOLLEY_KICK, HEADER, BLCYCLE_KICK, CHEST_CONTROL}
 #设置一个来自球的变量
 @export var ball : Ball
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
@@ -132,3 +134,7 @@ func on_animation_complete() -> void:
 	if current_state != null:
 		#如果不为空处理动画完成状态
 		current_state.on_animation_complete()
+
+func control_ball() -> void:
+	if ball.height > BALL_CONTROL_HEIGHT_MAX:
+		switch_state(Player.State.CHEST_CONTROL)

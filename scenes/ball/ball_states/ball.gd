@@ -9,10 +9,6 @@ const DISTANCE_HIGH_PASS := 130
 #为状态定义一个枚举 “携带状态”，“自由状态”，“发射状态”
 enum State {CARRIED, FREEFORM, SHOT}
 
-#导出变量 空气连接最小高度
-@export var air_connect_min_height : float
-#导出变量 空气连接最大高度
-@export var air_connect_max_height : float
 #定义一个摩擦力中的空气为浮点数
 @export var friction_air : float
 #定义一个地面摩擦力为浮点数
@@ -95,6 +91,6 @@ func can_air_interact() -> bool:
 	return current_state != null and current_state.can_air_interact()
 
 #是否能进行空中连接
-func can_air_connect() -> bool:
+func can_air_connect(air_connect_min_height: float, air_connect_max_height: float) -> bool:
 	#球的当前高度是否在该区间内
 	return height >= air_connect_min_height and height <= air_connect_max_height

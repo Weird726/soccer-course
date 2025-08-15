@@ -11,16 +11,20 @@ var animation_player : AnimationPlayer = null
 var ball : Ball = null
 #创建一个二维区域的变量
 var ball_detection_area : Area2D = null
+#定义一个自身变量
+var own_goal : Goal = null
 #保留一个对玩家的引用
 var player : Player = null
 #存放状态数据的变量(创建一个实例）
 var state_data : PlayerStateData = PlayerStateData.new()
+#定义一个目标变量
+var target_goal : Goal = null
 #队友检测区域
 var teammate_detection_area : Area2D = null
 
 #创建一个方法来设置这些状态节点,传入上下文玩家
 #将动画播放器作为属性的一部分进行传递
-func setup(context_player: Player, context_data : PlayerStateData,context_animation_player: AnimationPlayer, context_ball: Ball, context_teammate_detection_area: Area2D, context_ball_detection_area: Area2D) -> void:
+func setup(context_player: Player, context_data : PlayerStateData,context_animation_player: AnimationPlayer, context_ball: Ball, context_teammate_detection_area: Area2D, context_ball_detection_area: Area2D, context_own_goal: Goal, context_target_goal: Goal) -> void:
 	player = context_player
 	#设置正确的值
 	animation_player = context_animation_player
@@ -32,6 +36,9 @@ func setup(context_player: Player, context_data : PlayerStateData,context_animat
 	teammate_detection_area = context_teammate_detection_area
 	#设置正确的二维值
 	ball_detection_area = context_ball_detection_area
+	own_goal = context_own_goal
+	target_goal = context_target_goal
+
 
 #创建一个过渡状态方法,并传递参数(.new（）是设置为新实例）
 func transition_state(new_state: Player.State, data: PlayerStateData = PlayerStateData.new()) -> void:

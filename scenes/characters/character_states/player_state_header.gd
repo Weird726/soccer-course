@@ -1,6 +1,10 @@
 class_name PlayerStateHeader
 extends PlayerState
 
+#球高度最小值
+const BALL_HEIGHT_MIN := 10.0
+#球高度最大值
+const BALL_HEIGHT_MAX := 30.0
 #创建一个常量，初始额外力量奖励
 const BONUS_POWER := 1.3
 #创建一个常量，初始或起始高度
@@ -20,7 +24,7 @@ func _enter_tree() -> void:
 #自动断开信号的方法
 func on_ball_entered(contact_ball: Ball) -> void:
 	#判断我们是否与球体建立连接
-	if  contact_ball.can_air_connect():
+	if  contact_ball.can_air_connect(BALL_HEIGHT_MIN, BALL_HEIGHT_MAX):
 		#玩家的向量 * 归一化的值 * 额外奖励
 		contact_ball.shoot(player.velocity.normalized() * player.power * BONUS_POWER)
 

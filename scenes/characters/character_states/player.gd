@@ -18,9 +18,11 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, VOLL
 @export var ball : Ball
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
 @export var control_scheme : ControlScheme
+@export var own_goal :Goal
 #功率属性初始值变量
 @export var power : float
 @export var speed : float
+@export var target_goal : Goal
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var ball_detection_area: Area2D = %BallDetectionArea
@@ -66,7 +68,7 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 	#创建一个新状态，从状态工厂获取它并传入状态
 	current_state = state_factory.get_fresh_state(state)
 	#进行设置两个参数“玩家”与“动画机状态”(主对象)
-	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area)
+	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal)
 	#添加节点前先连接到信号，要绑定状态方法
 	current_state.state_transition_requested.connect(switch_state.bind())
 	#给节点起个特殊的名称，称之为玩家状态机,以字符串形式添加名称

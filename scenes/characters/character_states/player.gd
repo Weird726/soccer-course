@@ -14,6 +14,10 @@ const GRAVITY := 8.0
 
 #创建一个新的枚举类型
 enum ControlScheme {CPU, P1, P2}
+#为球队所创建的枚举，球员的职位
+enum Role {GOALIE, DEFENSE, MIDFIELD, OFFENSE}
+#为肤色创建一个枚举,浅色，中等，深色
+enum SkinColor {LIGHT, MEDIUM, DARK}
 #为所有不同的状态添加一个枚举
 enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, VOLLEY_KICK, HEADER, BLCYCLE_KICK, CHEST_CONTROL}
 #设置一个来自球的变量
@@ -34,10 +38,16 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, VOLL
 
 #跟踪当前状态的节点
 var current_state: PlayerState = null
+#名字变量
+var fullname := ""
 #引用玩家工厂状态,实例化一次就行
 var state_factory := PlayerStateFactory.new()
 #添加一个高度变量
 var height := 0.0
+#添加一个角色变量
+var role := Player.Role.MIDFIELD
+#皮肤颜色
+var skin_color := Player.SkinColor.MEDIUM
 #添加一个高度向量变量
 var height_velocity := 0.0
 #准备函数
@@ -60,6 +70,21 @@ func _process(delta: float) -> void:
 	process_gravity(delta)
 	#调用CharacterBody2D的方法来实现移动，这个方法是move_and_slide()
 	move_and_slide()
+
+#初始化方法,传入位置,球，球门.目标球门，数据,带有上下文的玩家资源
+func initialize(context_position: Vector2, context_ball: Ball, context_own_goal: Goal, context_target_goal: Goal,context_player_data: PlayerResource) -> void:
+		#初始化我们属性的所有值
+		position = context_position
+		ball = context_ball
+		own_goal = context_own_goal
+		target_goal = context_target_goal
+		speed = context_player_data.speed
+		power = context_player_data.power
+		role = context_player_data.role
+		skin_color = context_player_data.skin_color
+		fullname = context_player_data.full_name
+		#根据目标球门位置与自身位置来决定X值的大小
+		heading = Vector2.LEFT if target_goal.position.x < position.x else Vector2.RIGHT
 
 #切换状态的方法(默认情况下让DATA处于一个空实例）
 func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.new()) -> void:

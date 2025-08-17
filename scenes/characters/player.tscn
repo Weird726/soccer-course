@@ -1,9 +1,20 @@
-[gd_scene load_steps=19 format=3 uid="uid://bvmfhrxynl7ui"]
+[gd_scene load_steps=23 format=3 uid="uid://bvmfhrxynl7ui"]
 
 [ext_resource type="Texture2D" uid="uid://bexm0v2xgopsk" path="res://assets/art/characters/soccer-player.png" id="1_rp718"]
-[ext_resource type="Script" uid="uid://dnqr7l5u4ij78" path="res://scenes/characters/character_states/player.gd" id="1_yewv4"]
+[ext_resource type="Script" uid="uid://dnqr7l5u4ij78" path="res://scenes/characters/player.gd" id="1_yewv4"]
+[ext_resource type="Shader" uid="uid://b2rl5inn58pn7" path="res://shaders/replace_color.gdshader" id="2_atpat"]
+[ext_resource type="Texture2D" uid="uid://c28b18jf2m387" path="res://assets/art/palettes/skin-colors-palette.png" id="3_6eyoc"]
 [ext_resource type="Texture2D" uid="uid://b6e8elibx2c0x" path="res://assets/art/characters/player-shadow.png" id="3_76oj4"]
 [ext_resource type="Texture2D" uid="uid://8m4ju0x3bed3" path="res://assets/art/props/1p.png" id="3_dyp2m"]
+[ext_resource type="Texture2D" uid="uid://bex7eqh5dcqf0" path="res://assets/art/palettes/teams-color-palette.png" id="3_kqtwu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_atpat"]
+resource_local_to_scene = true
+shader = ExtResource("2_atpat")
+shader_parameter/skin_palette = ExtResource("3_6eyoc")
+shader_parameter/team_palette = ExtResource("3_kqtwu")
+shader_parameter/skin_color = 0
+shader_parameter/team_color = 0
 
 [sub_resource type="Animation" id="Animation_yewv4"]
 length = 0.001
@@ -272,6 +283,7 @@ radius = 6.0
 height = 20.0
 
 [node name="Player" type="CharacterBody2D"]
+collision_layer = 2
 platform_floor_layers = 2
 platform_wall_layers = 1
 script = ExtResource("1_yewv4")
@@ -280,6 +292,7 @@ speed = 80.0
 
 [node name="PlayerSprite" type="Sprite2D" parent="."]
 unique_name_in_owner = true
+material = SubResource("ShaderMaterial_atpat")
 texture = ExtResource("1_rp718")
 centered = false
 offset = Vector2(-16, -32)

@@ -9,6 +9,9 @@ const CONTROL_SCHEME_MAP : Dictionary = {
 	ControlScheme.P1: preload("res://assets/art/props/1p.png"),
 	ControlScheme.P2: preload("res://assets/art/props/2p.png"),
 }
+
+#添加一个常量，只列出国家名单,它将是一个数组类型
+const COUNTRIES := ["DEFAULT", "FRANCE", "ARGENTINA", "BRAZIL", "ENGLAND", "GERMANY", "ITALY", "SPAIN", "USA"]
 #重力常量
 const GRAVITY := 8.0
 
@@ -19,7 +22,7 @@ enum Role {GOALIE, DEFENSE, MIDFIELD, OFFENSE}
 #为肤色创建一个枚举,浅色，中等，深色
 enum SkinColor {LIGHT, MEDIUM, DARK}
 #为所有不同的状态添加一个枚举
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, VOLLEY_KICK, HEADER, BLCYCLE_KICK, CHEST_CONTROL}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BLCYCLE_KICK, CHEST_CONTROL}
 #设置一个来自球的变量
 @export var ball : Ball
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
@@ -36,29 +39,34 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, VOLL
 @onready var player_sprite: Sprite2D = %PlayerSprite
 @onready var teammate_detection_area: Area2D = %TeammateDetectionArea
 
+#国家变量
+var country := ""
 #跟踪当前状态的节点
 var current_state: PlayerState = null
 #名字变量
 var fullname := ""
-#引用玩家工厂状态,实例化一次就行
-var state_factory := PlayerStateFactory.new()
+#私有变量存储玩家面向的方向
+var heading := Vector2.RIGHT
 #添加一个高度变量
 var height := 0.0
+#添加一个高度向量变量
+var height_velocity := 0.0
 #添加一个角色变量
 var role := Player.Role.MIDFIELD
 #皮肤颜色
 var skin_color := Player.SkinColor.MEDIUM
-#添加一个高度向量变量
-var height_velocity := 0.0
+#引用玩家工厂状态,实例化一次就行
+var state_factory := PlayerStateFactory.new()
+
+
 #准备函数
 func _ready() -> void:
 	#调用设置图片方法
 	set_control_texture()
 	#将状态且黄岛.moving
 	switch_state(State.MOVING)
-
-#私有变量存储玩家面向的方向
-var heading := Vector2.RIGHT
+	#一个所有子节点都可以用的函数
+	set_shader_properties()
 
 #函数后面下划线可以消除警告
 func _process(delta: float) -> void:
@@ -71,8 +79,19 @@ func _process(delta: float) -> void:
 	#调用CharacterBody2D的方法来实现移动，这个方法是move_and_slide()
 	move_and_slide()
 
+#创建一个所有子节点都可以用的函数
+func set_shader_properties() -> void:
+	#调用玩家精灵并且影响材质,此处还要一个设置着色器的方法 国家
+	player_sprite.material.set_shader_parameter("skin_color", skin_color)
+	#选择国家的颜色,实际调用查找方法(如果期间数据出现错误将返回-1)
+	var country_color := COUNTRIES.find(country)
+	#国家的颜色生成限制在一个数之间
+	country_color = clampi(country_color, 0, COUNTRIES.size() - 1)
+	#调用玩家精灵并且影响材质,此处还要一个设置着色器的方法 队伍
+	player_sprite.material.set_shader_parameter("team_color", country_color)
+	
 #初始化方法,传入位置,球，球门.目标球门，数据,带有上下文的玩家资源
-func initialize(context_position: Vector2, context_ball: Ball, context_own_goal: Goal, context_target_goal: Goal,context_player_data: PlayerResource) -> void:
+func initialize(context_position: Vector2, context_ball: Ball, context_own_goal: Goal, context_target_goal: Goal,context_player_data: PlayerResource, context_country: String) -> void:
 		#初始化我们属性的所有值
 		position = context_position
 		ball = context_ball
@@ -85,6 +104,8 @@ func initialize(context_position: Vector2, context_ball: Ball, context_own_goal:
 		fullname = context_player_data.full_name
 		#根据目标球门位置与自身位置来决定X值的大小
 		heading = Vector2.LEFT if target_goal.position.x < position.x else Vector2.RIGHT
+		#国家名称参数
+		country = context_country
 
 #切换状态的方法(默认情况下让DATA处于一个空实例）
 func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.new()) -> void:

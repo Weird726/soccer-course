@@ -41,16 +41,16 @@ func spawn_players(country: String, own_goal: Goal) -> void:
 		#玩家数据将作为玩家资源中的i(as是或者的意思)
 		var player_data := players[i] as PlayerResource
 		#继续使用创建玩家方法,首先使用传递玩家的位置
-		var player := spawn_player(player_position, own_goal, target_goal, player_data)
+		var player := spawn_player(player_position, own_goal, target_goal, player_data, country)
 		#将节点添加为子节点
 		add_child(player)
 	
 
 #创建一个生成玩家的方法(需要指定节点，各项依赖等)
-func spawn_player(player_position: Vector2, own_goal: Goal, target_goal: Goal, player_data: PlayerResource) -> Player:
+func spawn_player(player_position: Vector2, own_goal: Goal, target_goal: Goal, player_data: PlayerResource, country: String) -> Player:
 		#玩家预制体实例化
 		var player := PLAYER_PREFAB.instantiate()
 		#将以上所有的值设置成玩家属性的一部分,直接调用初始化方法
-		player.initialize(player_position, ball, own_goal, target_goal, player_data)
+		player.initialize(player_position, ball, own_goal, target_goal, player_data, country)
 		#返回这个玩家
 		return player

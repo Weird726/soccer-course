@@ -14,7 +14,7 @@ func _enter_tree() -> void:
 	#标记时间戳（非常重要这个行为，必须要标记那个时间戳）
 	time_since_control = Time.get_ticks_msec()
 #检查一下时间
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	#判断我们是否在这个方法内部保持了一定的时间
 	if Time.get_ticks_msec() - time_since_control > DURATION_CONTROL:
 		#转换到移动状态

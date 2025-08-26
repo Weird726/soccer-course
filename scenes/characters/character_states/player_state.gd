@@ -5,6 +5,8 @@ extends Node
 #过去式信号名称,传入下一个状态，新状态（玩家状态的枚举值）
 signal state_transition_requested(new_state: Player.State, state_data: PlayerStateData)
 
+#添加AI状态引用
+var ai_behavior : AIBehavior = null
 #动画播放器的引用
 var animation_player : AnimationPlayer = null
 #对球的引用
@@ -24,7 +26,7 @@ var teammate_detection_area : Area2D = null
 
 #创建一个方法来设置这些状态节点,传入上下文玩家
 #将动画播放器作为属性的一部分进行传递
-func setup(context_player: Player, context_data : PlayerStateData,context_animation_player: AnimationPlayer, context_ball: Ball, context_teammate_detection_area: Area2D, context_ball_detection_area: Area2D, context_own_goal: Goal, context_target_goal: Goal) -> void:
+func setup(context_player: Player, context_data : PlayerStateData,context_animation_player: AnimationPlayer, context_ball: Ball, context_teammate_detection_area: Area2D, context_ball_detection_area: Area2D, context_own_goal: Goal, context_target_goal: Goal, context_ai_behavior: AIBehavior) -> void:
 	player = context_player
 	#设置正确的值
 	animation_player = context_animation_player
@@ -38,6 +40,7 @@ func setup(context_player: Player, context_data : PlayerStateData,context_animat
 	ball_detection_area = context_ball_detection_area
 	own_goal = context_own_goal
 	target_goal = context_target_goal
+	ai_behavior = context_ai_behavior
 
 
 #创建一个过渡状态方法,并传递参数(.new（）是设置为新实例）

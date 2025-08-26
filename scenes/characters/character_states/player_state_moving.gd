@@ -7,7 +7,8 @@ extends PlayerState
 func _process(_delta: float) -> void:
 	#检测是我们控制玩家还是CPU控制玩家（AI处理）
 	if player.control_scheme == Player.ControlScheme.CPU:
-		pass #这里是AI处理逻辑预留
+		#调用AI处理方法
+		ai_behavior.process_ai()
 	else:
 		#包含角色移动方向等的方法
 		handle_human_movement()

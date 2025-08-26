@@ -39,6 +39,8 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEAD
 @onready var player_sprite: Sprite2D = %PlayerSprite
 @onready var teammate_detection_area: Area2D = %TeammateDetectionArea
 
+#存储AI数据的变量
+var ai_behavior : AIBehavior = AIBehavior.new()
 #国家变量
 var country := ""
 #跟踪当前状态的节点
@@ -55,8 +57,12 @@ var height_velocity := 0.0
 var role := Player.Role.MIDFIELD
 #皮肤颜色
 var skin_color := Player.SkinColor.MEDIUM
+#存储位置的变量
+var spawn_position := Vector2.ZERO
 #引用玩家工厂状态,实例化一次就行
 var state_factory := PlayerStateFactory.new()
+#存储不同权重的变量
+var weight_on_duty_steering := 0.0
 
 
 #准备函数
@@ -67,6 +73,10 @@ func _ready() -> void:
 	switch_state(State.MOVING)
 	#一个所有子节点都可以用的函数
 	set_shader_properties()
+	#AI行为方法
+	setup_ai_behavior()
+	#初始化存储位置为当前位置
+	spawn_position = position
 
 #函数后面下划线可以消除警告
 func _process(delta: float) -> void:
@@ -107,6 +117,15 @@ func initialize(context_position: Vector2, context_ball: Ball, context_own_goal:
 		#国家名称参数
 		country = context_country
 
+#设置状态机
+func setup_ai_behavior() -> void:
+	ai_behavior.setup(self, ball)
+	#取个名字
+	ai_behavior.name = "AI Behavior"
+	#添加子对象
+	add_child(ai_behavior)
+
+
 #切换状态的方法(默认情况下让DATA处于一个空实例）
 func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.new()) -> void:
 	#首先判断现有状态是否需要要进行销毁（存在即销毁）
@@ -116,7 +135,7 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 	#创建一个新状态，从状态工厂获取它并传入状态
 	current_state = state_factory.get_fresh_state(state)
 	#进行设置两个参数“玩家”与“动画机状态”(主对象)
-	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal)
+	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal, ai_behavior)
 	#添加节点前先连接到信号，要绑定状态方法
 	current_state.state_transition_requested.connect(switch_state.bind())
 	#给节点起个特殊的名称，称之为玩家状态机,以字符串形式添加名称

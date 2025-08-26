@@ -14,6 +14,8 @@ const CONTROL_SCHEME_MAP : Dictionary = {
 const COUNTRIES := ["DEFAULT", "FRANCE", "ARGENTINA", "BRAZIL", "ENGLAND", "GERMANY", "ITALY", "SPAIN", "USA"]
 #重力常量
 const GRAVITY := 8.0
+#设置一个步行记忆阈值常量
+const WALK_ANIN_THRESHOLD := 0.6
 
 #创建一个新的枚举类型
 enum ControlScheme {CPU, P1, P2}
@@ -144,12 +146,16 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 	call_deferred("add_child", current_state)
 	
 func set_movemont_animation() -> void:
+	#创建一个速度变量
+	var vel_length := velocity.length()
 	#用速度来控制动画状态
-	#如果速度大于0，播放跑步动画，如果速度小于0，播放闲置动画
-	if velocity.length() > 0:
-		animation_player.play("run")
-	else:
+	#判断长度是否小于1
+	if vel_length < 1:
 		animation_player.play("idel")
+	elif vel_length < speed * WALK_ANIN_THRESHOLD:
+		animation_player.play("walk")
+	else:
+		animation_player.play("run")
 
 #处理重力的方法
 func process_gravity(delta: float) -> void:

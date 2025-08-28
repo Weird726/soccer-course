@@ -41,7 +41,7 @@ func handle_human_movement() -> void:
 		#判断玩家的速度是否为0
 		if player.velocity == Vector2.ZERO:
 			#判断我们如果面向目标
-			if is_facing_target_goal():
+			if player.is_facing_target_goal():
 				#我们就进入临空抽射状态
 				transition_state(Player.State.VOLLEY_KICK)
 			else:
@@ -55,10 +55,3 @@ func handle_human_movement() -> void:
 	#if player.velocity != Vector2.ZERO and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
 	#	#发动信号并携带铲球的参数
 	#	state_transition_requested.emit(Player.State.TACKLING)
-
-#此方法用判断是否面向目标
-func is_facing_target_goal() -> bool:
-	#其中使用的是归一化的向量
-	var direction_to_target_goal := player.position.direction_to(target_goal.position)
-	#返回一个大小为1的向量,同时确保角度小于90°，这才能保证余弦值才是正的
-	return player.heading.dot(direction_to_target_goal) > 0

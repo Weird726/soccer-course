@@ -199,6 +199,13 @@ func has_ball() -> bool:
 func set_control_texture() -> void:
 	control_sprite.texture = CONTROL_SCHEME_MAP[control_scheme]
 
+#此方法用判断是否面向目标
+func is_facing_target_goal() -> bool:
+	#其中使用的是归一化的向量
+	var direction_to_target_goal := position.direction_to(target_goal.position)
+	#返回一个大小为1的向量,同时确保角度小于90°，这才能保证余弦值才是正的
+	return heading.dot(direction_to_target_goal) > 0
+
 #创建一个回调方法
 func on_animation_complete() -> void:
 	#判断玩家数据是否为空

@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bvmfhrxynl7ui"]
+[gd_scene load_steps=26 format=3 uid="uid://bvmfhrxynl7ui"]
 
 [ext_resource type="Texture2D" uid="uid://bexm0v2xgopsk" path="res://assets/art/characters/soccer-player.png" id="1_rp718"]
 [ext_resource type="Script" uid="uid://dnqr7l5u4ij78" path="res://scenes/characters/player.gd" id="1_yewv4"]
@@ -277,12 +277,30 @@ tracks/0/keys = {
 "values": [12, 13, 14, 15, 16, 17]
 }
 
+[sub_resource type="Animation" id="Animation_xhtjm"]
+resource_name = "hurt"
+length = 0.2
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PlayerSprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [54, 55]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_76oj4"]
 _data = {
 &"RESET": SubResource("Animation_yewv4"),
 &"bicycle_kick": SubResource("Animation_eojnx"),
 &"chest_control": SubResource("Animation_2l4js"),
 &"header": SubResource("Animation_7vyk4"),
+&"hurt": SubResource("Animation_xhtjm"),
 &"idel": SubResource("Animation_rp718"),
 &"kick": SubResource("Animation_6eyoc"),
 &"prep_kick": SubResource("Animation_kqtwu"),
@@ -301,12 +319,14 @@ height = 18.0
 radius = 6.0
 height = 20.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6eyoc"]
+size = Vector2(7, 7)
+
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
 platform_floor_layers = 2
 platform_wall_layers = 1
 script = ExtResource("1_yewv4")
-control_scheme = null
 power = 150.0
 speed = 80.0
 
@@ -364,3 +384,14 @@ monitorable = false
 position = Vector2(0, -8)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_dyp2m")
+
+[node name="TackleDamageEmitterArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TackleDamageEmitterArea"]
+position = Vector2(13, -3)
+shape = SubResource("RectangleShape2D_6eyoc")

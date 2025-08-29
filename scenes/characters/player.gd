@@ -24,7 +24,7 @@ enum Role {GOALIE, DEFENSE, MIDFIELD, OFFENSE}
 #为肤色创建一个枚举,浅色，中等，深色
 enum SkinColor {LIGHT, MEDIUM, DARK}
 #为所有不同的状态添加一个枚举
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BLCYCLE_KICK, CHEST_CONTROL}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BLCYCLE_KICK, CHEST_CONTROL, HURT}
 #设置一个来自球的变量
 @export var ball : Ball
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
@@ -39,6 +39,7 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEAD
 @onready var ball_detection_area: Area2D = %BallDetectionArea
 @onready var control_sprite: Sprite2D = %ControlSprite
 @onready var player_sprite: Sprite2D = %PlayerSprite
+@onready var tackle_damage_emitter_area: Area2D = %TackleDamageEmitterArea
 @onready var teammate_detection_area: Area2D = %TeammateDetectionArea
 
 #存储AI数据的变量
@@ -77,6 +78,7 @@ func _ready() -> void:
 	set_shader_properties()
 	#AI行为方法
 	setup_ai_behavior()
+	tackle_damage_emitter_area.body_entered.connect(on_tackle_player.bind())
 	#初始化存储位置为当前位置
 	spawn_position = position
 
@@ -137,7 +139,7 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 	#创建一个新状态，从状态工厂获取它并传入状态
 	current_state = state_factory.get_fresh_state(state)
 	#进行设置两个参数“玩家”与“动画机状态”(主对象)
-	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal, ai_behavior)
+	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal,tackle_damage_emitter_area, ai_behavior)
 	#添加节点前先连接到信号，要绑定状态方法
 	current_state.state_transition_requested.connect(switch_state.bind())
 	#给节点起个特殊的名称，称之为玩家状态机,以字符串形式添加名称
@@ -183,12 +185,19 @@ func set_heading() -> void:
 func flip_sprites() -> void:
 	if heading == Vector2.RIGHT:
 		player_sprite.flip_h = false
+		tackle_damage_emitter_area.scale.x = 1
 	elif heading == Vector2.LEFT:
 		player_sprite.flip_h = true
+		tackle_damage_emitter_area.scale.x = -1
 
 #翻转精灵方法.可见或者不可见
 func set_sprite_visibility() -> void:
 	control_sprite.visible = has_ball() or not control_scheme == ControlScheme.CPU
+
+#抢断伤害方法
+func get_hurt(hurt_origin: Vector2) -> void:
+	#转换时传递正确信息
+	switch_state(Player.State.HURT, PlayerStateData.build().set_hurt_direction(hurt_origin))
 
 #设置一个检查当前是否持有球的方法
 func has_ball() -> bool:
@@ -205,6 +214,13 @@ func is_facing_target_goal() -> bool:
 	var direction_to_target_goal := position.direction_to(target_goal.position)
 	#返回一个大小为1的向量,同时确保角度小于90°，这才能保证余弦值才是正的
 	return heading.dot(direction_to_target_goal) > 0
+
+#抢断方法
+func on_tackle_player(player: Player) -> void:
+	#判断玩家是否持球
+	if player != self and player.country != country and player == ball.carrier:
+		#抢断后的位置方向
+		player.get_hurt(position.direction_to(player.position))
 
 #创建一个回调方法
 func on_animation_complete() -> void:

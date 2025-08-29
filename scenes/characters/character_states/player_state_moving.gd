@@ -52,6 +52,6 @@ func handle_human_movement() -> void:
 			transition_state(Player.State.HEADER)
 	
 	#判断玩家的速度是否与向量零不同，并且调用KeyUtils的is_action_just_pressed（）的方法，一个判断值判断是否过度到铲球状态
-	#if player.velocity != Vector2.ZERO and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
-	#	#发动信号并携带铲球的参数
-	#	state_transition_requested.emit(Player.State.TACKLING)
+	if player.velocity != Vector2.ZERO and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
+		#发动信号并携带铲球的参数
+		state_transition_requested.emit(Player.State.TACKLING)

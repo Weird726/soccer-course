@@ -21,12 +21,14 @@ var player : Player = null
 var state_data : PlayerStateData = PlayerStateData.new()
 #定义一个目标变量
 var target_goal : Goal = null
+#定义一个抢断发射区域变量
+var tackle_damage_emitter_area : Area2D = null
 #队友检测区域
 var teammate_detection_area : Area2D = null
 
 #创建一个方法来设置这些状态节点,传入上下文玩家
 #将动画播放器作为属性的一部分进行传递
-func setup(context_player: Player, context_data : PlayerStateData,context_animation_player: AnimationPlayer, context_ball: Ball, context_teammate_detection_area: Area2D, context_ball_detection_area: Area2D, context_own_goal: Goal, context_target_goal: Goal, context_ai_behavior: AIBehavior) -> void:
+func setup(context_player: Player, context_data : PlayerStateData,context_animation_player: AnimationPlayer, context_ball: Ball, context_teammate_detection_area: Area2D, context_ball_detection_area: Area2D, context_own_goal: Goal, context_target_goal: Goal, context_tackle_damage_emitter_area: Area2D, context_ai_behavior: AIBehavior) -> void:
 	player = context_player
 	#设置正确的值
 	animation_player = context_animation_player
@@ -41,6 +43,7 @@ func setup(context_player: Player, context_data : PlayerStateData,context_animat
 	own_goal = context_own_goal
 	target_goal = context_target_goal
 	ai_behavior = context_ai_behavior
+	tackle_damage_emitter_area = context_tackle_damage_emitter_area
 
 
 #创建一个过渡状态方法,并传递参数(.new（）是设置为新实例）

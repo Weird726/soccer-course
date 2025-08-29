@@ -14,7 +14,7 @@ var time_finish_tackle := Time.get_ticks_msec()
 #当我们进入树中.开始过度到这个状态
 func _enter_tree() -> void:
 	animation_player.play("tackle")
-
+	tackle_damage_emitter_area.monitorable = true
 
 #处理方法
 func _process(delta: float) -> void:
@@ -32,3 +32,7 @@ func _process(delta: float) -> void:
 		elif Time.get_ticks_msec() - time_finish_tackle > DURATION_PRIOR_RECOVERY:
 			#如果是就会转换到玩家的移动状态
 			transition_state(Player.State.RECOVERING)
+
+#退出状态后的停止监控方法
+func _exit_tree() -> void:
+	tackle_damage_emitter_area.monitoring = false

@@ -1,6 +1,8 @@
 #不需要扩展，做成一个简单容器
 class_name PlayerStateData
 
+#伤害的方向变量
+var hurt_direction: Vector2
 #创建一个射击方向变量，它是一个二维方向变量
 var shot_direction : Vector2
 #创建一个设计力度变量，它是一个浮点数
@@ -23,4 +25,8 @@ func set_shot_power(power: float) -> PlayerStateData:
 	#设定力量强度
 	shot_power = power
 	#返回父类
+	return self
+
+func set_hurt_direction(direction: Vector2) -> PlayerStateData:
+	hurt_direction = direction
 	return self

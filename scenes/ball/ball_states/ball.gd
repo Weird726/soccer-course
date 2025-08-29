@@ -5,6 +5,8 @@ extends AnimatableBody2D
 const BOUNCINESS := 0.8
 #距离高度阈值
 const DISTANCE_HIGH_PASS := 130
+#下跌高度速度
+const TUMBLE_HEIGHT_VELOCITY := 3.0
 
 #为状态定义一个枚举 “携带状态”，“自由状态”，“发射状态”
 enum State {CARRIED, FREEFORM, SHOT}
@@ -65,6 +67,11 @@ func shoot (shot_velocity : Vector2) -> void:
 	#切换状态
 	switch_state(Ball.State.SHOT)
 
+func tumble(tumble_velocity: Vector2) -> void:
+	velocity = tumble_velocity
+	carrier = null
+	height_velocity = TUMBLE_HEIGHT_VELOCITY
+	switch_state(Ball.State.FREEFORM)
 
 #设置一个速度方法，不会返回任何内容的向量
 func pass_to(destination: Vector2) -> void:

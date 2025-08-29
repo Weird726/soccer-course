@@ -9,6 +9,8 @@ const SHOT_DISTANCE := 150
 const SHOT_PROBABILITY := 0.3
 #创建一个球员速度常量
 const SPREAD_ASSIST_FACTOR := 0.8
+const TACKLE_DISTANCE := 15
+const TACKLE_PROBABILITY := 0.3
 
 #定义一些变量来存储引用
 var ball : Ball = null
@@ -56,6 +58,10 @@ func perform_ai_movement() -> void:
 
 #AI决策部分
 func perform_ai_decisions() -> void:
+	#判断球是否被对方球员持有
+	if is_ball_possessed_by_opponent() and player.position.distance_to(ball.position) < TACKLE_DISTANCE and randf() < TACKLE_PROBABILITY:
+		#进入拦截状态
+		player.switch_state(Player.State.TACKLING)
 	#首先判断球员是否持球
 	if ball.carrier == player:
 		#计算球员与球门之间的距离
@@ -121,6 +127,10 @@ func face_towards_target_goal() -> void:
 	if not player.is_facing_target_goal():
 		player.heading = player.heading * -1
 
+#用于判断对手控球状态的方法
+func is_ball_possessed_by_opponent() -> bool:
+	#返回值
+	return ball.carrier != null and ball.carrier.country != player.country
 #创建一个判断球队当前是否持球的函数
 func is_ball_carried_by_teammate() -> bool:
 	#判断当前要有持球者的同时保证持球者不是玩家自己

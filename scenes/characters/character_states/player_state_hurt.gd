@@ -12,6 +12,7 @@ func _enter_tree() -> void:
 	animation_player.play("hurt")
 	time_start_hurt = Time.get_ticks_msec()
 	player.height_velocity = HURT_HEIGHT_VELOCITY
+	player.height = 0.1
 	#判断是否持球
 	if ball.carrier == player:
 		#球的下跌速度

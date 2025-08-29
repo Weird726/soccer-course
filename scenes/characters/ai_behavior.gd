@@ -3,6 +3,8 @@ extends Node
 
 #限制调用的计时器常量
 const DURATION_AI_TICK_FREQUENCY := 200
+#通过概率常量
+const PASS_PROBABILTY := 0.05
 #创建一个150的常量
 const SHOT_DISTANCE := 150
 #概率常量
@@ -14,6 +16,8 @@ const TACKLE_PROBABILITY := 0.3
 
 #定义一些变量来存储引用
 var ball : Ball = null
+#定义一个对手检测区域变量初始化为空（ai）
+var opponent_detection_area : Area2D = null
 var player : Player = null
 #创建一个计时器变量并初始化为当前时间戳
 var time_since_last_ai_tick := Time.get_ticks_msec()
@@ -24,9 +28,10 @@ func _ready() -> void:
 	time_since_last_ai_tick = Time.get_ticks_msec() + randi_range(0, DURATION_AI_TICK_FREQUENCY)
 
 #创建一个依赖方法setup
-func setup(context_player : Player, context_ball : Ball) -> void:
+func setup(context_player : Player, context_ball : Ball, context_opponent_detection_area: Area2D) -> void:
 	player = context_player
 	ball = context_ball
+	opponent_detection_area = context_opponent_detection_area
 
 #创建一个空方法用于AI处理，每次AI执行任务时都执行这个方法
 func process_ai() -> void:
@@ -76,6 +81,9 @@ func perform_ai_decisions() -> void:
 			var data := PlayerStateData.build().set_shot_power(player.power).set_shot_direction(shot_direction)
 			#在射门前确保目标面朝射门方向
 			player.switch_state(Player.State.SHOOTING, data)
+		#不需要射门情况下判断是否有对手
+		elif has_opponents_nearby() and randf() < PASS_PROBABILTY:
+			player.switch_state(Player.State.PASSING)
 
 func get_onduty_steering_force() -> Vector2:
 	#返回球员的权重 * 方向向量相乘
@@ -135,3 +143,8 @@ func is_ball_possessed_by_opponent() -> bool:
 func is_ball_carried_by_teammate() -> bool:
 	#判断当前要有持球者的同时保证持球者不是玩家自己
 	return ball.carrier != null and ball.carrier != player and ball.carrier.country == player.country
+
+#检测区域内部是否有敌对球队的玩家方法
+func has_opponents_nearby() -> bool:
+	var players := opponent_detection_area.get_overlapping_bodies()
+	return players.find_custom(func(p: Player): return p.country != player.country) > -1

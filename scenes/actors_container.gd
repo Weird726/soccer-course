@@ -38,7 +38,7 @@ func _ready() -> void:
 	player.set_control_texture()
 	
 #检查时间的进程方法
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	#判断如果我们花费足够的时间该怎么办
 	if Time.get_ticks_msec() - time_since_last_cache_refresh > DURATION_WEIGHT_CACHE:
 		#首先确保更新时间戳

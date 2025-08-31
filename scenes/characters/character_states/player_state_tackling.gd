@@ -14,7 +14,7 @@ var time_finish_tackle := Time.get_ticks_msec()
 #当我们进入树中.开始过度到这个状态
 func _enter_tree() -> void:
 	animation_player.play("tackle")
-	tackle_damage_emitter_area.monitorable = true
+	tackle_damage_emitter_area.monitoring = true
 
 #处理方法
 func _process(delta: float) -> void:

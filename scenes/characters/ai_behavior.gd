@@ -67,7 +67,7 @@ func perform_ai_decisions() -> void:
 	if is_ball_possessed_by_opponent() and player.position.distance_to(ball.position) < TACKLE_DISTANCE and randf() < TACKLE_PROBABILITY:
 		#进入拦截状态
 		player.switch_state(Player.State.TACKLING)
-	#首先判断球员是否持球
+		#首先判断球员是否持球
 	if ball.carrier == player:
 		#计算球员与球门之间的距离
 		var target := player.target_goal.get_center_target_position()

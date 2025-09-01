@@ -36,22 +36,25 @@ func handle_human_movement() -> void:
 		elif KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
 			#过渡到预设门状态
 			transition_state(Player.State.PREPPING_SHOT)
+	elif KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
 	#球体本身创造一个方法进行询问，你属于什么状态(判断是你是否是空中交互状态）
-	elif ball.can_air_interact() and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
+		if ball.can_air_interact():
 		#判断玩家的速度是否为0
-		if player.velocity == Vector2.ZERO:
-			#判断我们如果面向目标
-			if player.is_facing_target_goal():
-				#我们就进入临空抽射状态
-				transition_state(Player.State.VOLLEY_KICK)
+			if player.velocity == Vector2.ZERO:
+				#判断我们如果面向目标
+				if player.is_facing_target_goal():
+					#我们就进入临空抽射状态
+					transition_state(Player.State.VOLLEY_KICK)
+				else:
+					#进入倒挂射门状态
+					transition_state(Player.State.BLCYCLE_KICK)
 			else:
-				#进入倒挂射门状态
-				transition_state(Player.State.BLCYCLE_KICK)
-		else:
-			#切换到头球状态
-			transition_state(Player.State.HEADER)
-	
+				#切换到头球状态
+				transition_state(Player.State.HEADER)
 	#判断玩家的速度是否与向量零不同，并且调用KeyUtils的is_action_just_pressed（）的方法，一个判断值判断是否过度到铲球状态
-	if player.velocity != Vector2.ZERO and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
-		#发动信号并携带铲球的参数
-		state_transition_requested.emit(Player.State.TACKLING)
+		elif player.velocity != Vector2.ZERO:
+			#发动信号并携带铲球的参数
+			state_transition_requested.emit(Player.State.TACKLING)
+
+func can_carry_ball() -> bool:
+	return player.role != Player.Role.GOALIE

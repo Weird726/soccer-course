@@ -53,3 +53,6 @@ func transition_state(new_state: Player.State, data: PlayerStateData = PlayerSta
 #创建一个回调方法
 func on_animation_complete() -> void:
 	pass
+
+func can_carry_ball() -> bool:
+	return false

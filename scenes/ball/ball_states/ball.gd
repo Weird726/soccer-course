@@ -19,6 +19,8 @@ enum State {CARRIED, FREEFORM, SHOT}
 @onready var animation_player: AnimationPlayer = %AnimationPlayer
 @onready var ball_sprite: Sprite2D = %BallSprite
 @onready var player_dectection_area: Area2D = %PlayerDectectionArea
+@onready var scoring_raycast: RayCast2D = %ScoringRaycast
+
 #类型为玩家的携带者属性
 var carrier : Player = null
 #定义一个当前的状态，初始值为空
@@ -40,6 +42,8 @@ func _ready() -> void:
 #查看在哪里访问球体精灵的方法
 func _process(_sadelta: float) -> void:
 	ball_sprite.position = Vector2.UP * height
+	#通过rotation获取角度进行旋转sd
+	scoring_raycast.rotation = velocity.angle()
 
 #创建一个方法用来切换状态
 func switch_state(state: Ball.State) -> void:
@@ -101,3 +105,10 @@ func can_air_interact() -> bool:
 func can_air_connect(air_connect_min_height: float, air_connect_max_height: float) -> bool:
 	#球的当前高度是否在该区间内
 	return height >= air_connect_min_height and height <= air_connect_max_height
+
+#创建一个朝着得分区域前进的射线
+func is_headed_for_scoring_area(scoring_area: Area2D) -> bool:
+	#判断射线是否碰撞
+	if not scoring_raycast.is_colliding():
+		return false
+	return scoring_raycast.get_collider() == scoring_area

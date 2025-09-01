@@ -8,11 +8,12 @@ func _enter_tree() -> void:
 
 #创建绑定的方法，接收一个玩家参数
 func on_player_enter(body : Player) -> void:
-	#从被携带状态转换属性
-	ball.carrier = body
-	body.control_ball()
-	#切换到被携带状态
-	state_transition_requested.emit(Ball.State.CARRIED)
+	if body.can_carry_ball():
+		#从被携带状态转换属性
+		ball.carrier = body
+		body.control_ball()
+		#切换到被携带状态
+		state_transition_requested.emit(Ball.State.CARRIED)
 
 #判断状态播放动画的方法
 func _process(delta: float) -> void:

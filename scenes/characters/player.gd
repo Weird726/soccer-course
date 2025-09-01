@@ -24,7 +24,7 @@ enum Role {GOALIE, DEFENSE, MIDFIELD, OFFENSE}
 #为肤色创建一个枚举,浅色，中等，深色
 enum SkinColor {LIGHT, MEDIUM, DARK}
 #为所有不同的状态添加一个枚举
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BLCYCLE_KICK, CHEST_CONTROL, HURT}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BLCYCLE_KICK, CHEST_CONTROL, HURT, DIVING}
 #设置一个来自球的变量
 @export var ball : Ball
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
@@ -38,15 +38,19 @@ enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEAD
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var ball_detection_area: Area2D = %BallDetectionArea
 @onready var control_sprite: Sprite2D = %ControlSprite
+@onready var goalie_hands_collider: CollisionShape2D = %GoalieHandsCollider
 @onready var opponent_detection_area: Area2D = %OpponentDetectionArea
+@onready var permanent_damage_emitter_area: Area2D = %PermanentDamageEmitterArea
 @onready var player_sprite: Sprite2D = %PlayerSprite
 @onready var tackle_damage_emitter_area: Area2D = %TackleDamageEmitterArea
 @onready var teammate_detection_area: Area2D = %TeammateDetectionArea
 
-#存储AI数据的变量
-var ai_behavior : AIBehavior = AIBehavior.new()
+#存储AI数据的变量,从AI工厂获取
+var ai_behavior_factory := AIBehaviorFactory.new()
 #国家变量
 var country := ""
+#当前的AI行为变量
+var current_ai_behavior : AIBehavior = null
 #跟踪当前状态的节点
 var current_state: PlayerState = null
 #名字变量
@@ -73,13 +77,18 @@ var weight_on_duty_steering := 0.0
 func _ready() -> void:
 	#调用设置图片方法
 	set_control_texture()
+	#AI行为方法
+	setup_ai_behavior()
 	#将状态且黄岛.moving
 	switch_state(State.MOVING)
 	#一个所有子节点都可以用的函数
 	set_shader_properties()
-	#AI行为方法
-	setup_ai_behavior()
+	#专为守门员的信号发射
+	permanent_damage_emitter_area.monitoring = role == Role.GOALIE
+	#当角色不是守门员，将禁用此状态
+	goalie_hands_collider.disabled = role != Role.GOALIE
 	tackle_damage_emitter_area.body_entered.connect(on_tackle_player.bind())
+	permanent_damage_emitter_area.body_entered.connect(on_tackle_player.bind())
 	#初始化存储位置为当前位置
 	spawn_position = position
 
@@ -124,11 +133,13 @@ func initialize(context_position: Vector2, context_ball: Ball, context_own_goal:
 
 #设置状态机
 func setup_ai_behavior() -> void:
-	ai_behavior.setup(self, ball, opponent_detection_area)
+	#从工厂调用正确的参数，正确实例化
+	current_ai_behavior = ai_behavior_factory.get_ai_behavior(role)
+	current_ai_behavior.setup(self, ball, opponent_detection_area)
 	#取个名字
-	ai_behavior.name = "AI Behavior"
+	current_ai_behavior.name = "AI Behavior"
 	#添加子对象
-	add_child(ai_behavior)
+	add_child(current_ai_behavior)
 
 
 #切换状态的方法(默认情况下让DATA处于一个空实例）
@@ -140,7 +151,7 @@ func switch_state(state: State, state_data: PlayerStateData = PlayerStateData.ne
 	#创建一个新状态，从状态工厂获取它并传入状态
 	current_state = state_factory.get_fresh_state(state)
 	#进行设置两个参数“玩家”与“动画机状态”(主对象)
-	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal,tackle_damage_emitter_area, ai_behavior)
+	current_state.setup(self, state_data, animation_player, ball, teammate_detection_area, ball_detection_area, own_goal, target_goal,tackle_damage_emitter_area, current_ai_behavior)
 	#添加节点前先连接到信号，要绑定状态方法
 	current_state.state_transition_requested.connect(switch_state.bind())
 	#给节点起个特殊的名称，称之为玩家状态机,以字符串形式添加名称
@@ -217,6 +228,10 @@ func is_facing_target_goal() -> bool:
 	var direction_to_target_goal := position.direction_to(target_goal.position)
 	#返回一个大小为1的向量,同时确保角度小于90°，这才能保证余弦值才是正的
 	return heading.dot(direction_to_target_goal) > 0
+
+#判断球员持球
+func can_carry_ball() -> bool:
+	return current_state != null and  current_state.can_carry_ball()
 
 #抢断方法
 func on_tackle_player(player: Player) -> void:

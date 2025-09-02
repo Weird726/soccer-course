@@ -10,7 +10,9 @@ func _enter_tree() -> void:
 #监听器方法
 func on_animation_complete() -> void:
 	#寻找传球的目标
-	var pass_target := find_teammate_in_view()
+	var pass_target := state_data.pass_target
+	if pass_target == null:
+		pass_target = find_teammate_in_view()
 	#判断传球目标是否为空
 	if pass_target == null:
 		#没有目标的情况下，球只向前传一点

@@ -218,6 +218,13 @@ func has_ball() -> bool:
 	#返回携带球的玩家是否是当前玩家
 	return ball.carrier == self
 
+#接收玩家请求传球参数
+func get_pass_request(player: Player) -> void:
+	#判断是否我们手里持有球
+	if ball.carrier == self and current_state != null and current_state.can_pass():
+		#切换到传球状态，同时传入相关信息
+		switch_state(Player.State.PASSING, PlayerStateData.build().set_pass_target(player))
+
 #用于设置正确的纹理方法
 func set_control_texture() -> void:
 	control_sprite.texture = CONTROL_SCHEME_MAP[control_scheme]

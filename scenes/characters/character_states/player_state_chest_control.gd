@@ -19,3 +19,6 @@ func _process(_delta: float) -> void:
 	if Time.get_ticks_msec() - time_since_control > DURATION_CONTROL:
 		#转换到移动状态
 		transition_state(Player.State.MOVING)
+
+func can_pass() -> bool:
+	return true

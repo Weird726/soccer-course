@@ -36,6 +36,9 @@ func handle_human_movement() -> void:
 		elif KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
 			#过渡到预设门状态
 			transition_state(Player.State.PREPPING_SHOT)
+	elif can_teammate_pass_ball() and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.PASS):
+		#向队友发送传球请求
+		ball.carrier.get_pass_request(player)
 	elif KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
 	#球体本身创造一个方法进行询问，你属于什么状态(判断是你是否是空中交互状态）
 		if ball.can_air_interact():
@@ -58,3 +61,10 @@ func handle_human_movement() -> void:
 
 func can_carry_ball() -> bool:
 	return player.role != Player.Role.GOALIE
+
+#创建队友能否传球方法
+func can_teammate_pass_ball() -> bool:
+	return ball.carrier != null and ball.carrier.country == player.country and ball.carrier.control_scheme == Player.ControlScheme.CPU
+
+func can_pass() -> bool:
+	return true

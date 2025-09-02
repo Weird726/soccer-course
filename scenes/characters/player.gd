@@ -135,7 +135,7 @@ func initialize(context_position: Vector2, context_ball: Ball, context_own_goal:
 func setup_ai_behavior() -> void:
 	#从工厂调用正确的参数，正确实例化
 	current_ai_behavior = ai_behavior_factory.get_ai_behavior(role)
-	current_ai_behavior.setup(self, ball, opponent_detection_area)
+	current_ai_behavior.setup(self, ball, opponent_detection_area, teammate_detection_area)
 	#取个名字
 	current_ai_behavior.name = "AI Behavior"
 	#添加子对象

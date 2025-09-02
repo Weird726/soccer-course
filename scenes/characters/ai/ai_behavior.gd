@@ -10,6 +10,8 @@ var ball : Ball = null
 #定义一个对手检测区域变量初始化为空（ai）
 var opponent_detection_area : Area2D = null
 var player : Player = null
+#ai引用区域
+var teammate_detection_area : Area2D = null
 #创建一个计时器变量并初始化为当前时间戳
 var time_since_last_ai_tick := Time.get_ticks_msec()
 
@@ -19,10 +21,11 @@ func _ready() -> void:
 	time_since_last_ai_tick = Time.get_ticks_msec() + randi_range(0, DURATION_AI_TICK_FREQUENCY)
 
 #创建一个依赖方法setup
-func setup(context_player : Player, context_ball : Ball, context_opponent_detection_area: Area2D) -> void:
+func setup(context_player : Player, context_ball : Ball, context_opponent_detection_area: Area2D, context_teammate_detection_area: Area2D,) -> void:
 	player = context_player
 	ball = context_ball
 	opponent_detection_area = context_opponent_detection_area
+	teammate_detection_area = context_teammate_detection_area
 
 #创建一个空方法用于AI处理，每次AI执行任务时都执行这个方法
 func process_ai() -> void:

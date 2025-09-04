@@ -69,9 +69,11 @@ func spawn_players(country: String, own_goal: Goal) -> Array[Player]:
 #创建一个生成玩家的方法(需要指定节点，各项依赖等)
 func spawn_player(player_position: Vector2, own_goal: Goal, target_goal: Goal, player_data: PlayerResource, country: String) -> Player:
 		#玩家预制体实例化
-		var player := PLAYER_PREFAB.instantiate()
+		var player : Player = PLAYER_PREFAB.instantiate()
 		#将以上所有的值设置成玩家属性的一部分,直接调用初始化方法
 		player.initialize(player_position, ball, own_goal, target_goal, player_data, country)
+		#监听信号,创建回调方法
+		player.swap_requested.connect(on_player_swap_request.bind())
 		#返回这个玩家
 		return player
 
@@ -91,3 +93,30 @@ func set_on_duty_weights() -> void:
 		for i in range(cpu_players.size()):
 			#将执行操作1 - 缓动函数
 			cpu_players[i].weight_on_duty_steering = 1 - ease(float(i)/10.0, 0.1)
+
+#球员交换请求回调方法
+func on_player_swap_request(requester: Player) -> void:
+	var squad := squad_home if requester.country == squad_home[0].country else squad_away
+	var cpu_players : Array[Player] = squad.filter(
+	#自定义函数
+	#判断是否由CPU操控的同时确保守门员没有被操控
+		func(p: Player): return p.control_scheme == Player.ControlScheme.CPU and p.role != Player.Role.GOALIE
+	)
+	#cpu玩家的自定义排序
+	cpu_players.sort_custom(func(p1: Player, p2: Player):
+		#计算两个球之间的距离并且进行比较
+		return p1.position.distance_squared_to(ball.position) < p2.position.distance_squared_to(ball.position))
+	#选择离球最近的那个玩家
+	var closest_cpu_to_ball : Player = cpu_players[0]
+	#判断他们之间的距离，距离更近就直接交换
+	if closest_cpu_to_ball.position.distance_squared_to(ball.position) < requester.position.distance_squared_to(ball.position):
+		#首先判断请求内存者是玩家1还是玩家2
+		var player_control_scheme := requester.control_scheme
+		#存储完毕后执行交换(改为CPU控制方案)
+		requester.control_scheme = Player.ControlScheme.CPU
+		#调用设置纹理来控制头上的球员图标
+		requester.set_control_texture()
+		#同时交换最近的CPU球员,赋予存储的值
+		closest_cpu_to_ball.control_scheme = player_control_scheme
+		#调用设置纹理来控制头上的球员图标
+		closest_cpu_to_ball.set_control_texture()

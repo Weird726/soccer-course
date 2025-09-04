@@ -26,7 +26,7 @@ func _process(delta: float) -> void:
 	#检查已经过去了多少时间,如果超过一秒
 	if Time.get_ticks_msec() - time_since_shot > DURATION_SHOT:
 		#将过度到自由形态
-		state_transition_requested.emit(Ball.State.FREEFORM)
+		transition_state(Ball.State.FREEFORM)
 	else:
 		#运动计算用调用move_and_collide方法来计算，并保持物理为关闭状态
 		move_and_bounce(delta)

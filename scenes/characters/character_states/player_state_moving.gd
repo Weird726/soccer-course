@@ -26,21 +26,23 @@ func handle_human_movement() -> void:
 	if player.velocity != Vector2.ZERO:
 		#它们按下了一个方向,旋转视野锥体
 		teammate_detection_area.rotation = player.velocity.angle()
-		
-	#判断玩家是否持球,且刚按下传球键
-	if player.has_ball() :
-		if KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.PASS):
+
+	if KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.PASS):
+		if player.has_ball() :
 			#过渡到预设门状态
 			transition_state(Player.State.PASSING)
+		elif can_teammate_pass_ball():
+			ball.carrier.get_pass_request(player)
+		else:
+			#调用信号
+			player.swap_requested.emit(player)
+
 		#判断玩家是否持球,且刚按下射门键
-		elif KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
+	elif KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
+		if player.has_ball() :
 			#过渡到预设门状态
 			transition_state(Player.State.PREPPING_SHOT)
-	elif can_teammate_pass_ball() and KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.PASS):
-		#向队友发送传球请求
-		ball.carrier.get_pass_request(player)
-	elif KeyUtils.is_action_just_pressed(player.control_scheme, KeyUtils.Action.SHOOT):
-	#球体本身创造一个方法进行询问，你属于什么状态(判断是你是否是空中交互状态）
+		#球体本身创造一个方法进行询问，你属于什么状态(判断是你是否是空中交互状态）
 		if ball.can_air_interact():
 		#判断玩家的速度是否为0
 			if player.velocity == Vector2.ZERO:

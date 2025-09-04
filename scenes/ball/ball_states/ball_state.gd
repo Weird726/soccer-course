@@ -18,9 +18,11 @@ var carrier : Player = null
 var player_detection_area : Area2D = null
 #创建一个变量，球自身精灵贴图
 var sprite : Sprite2D = null
+#添加属性跟踪状态
+var state_data : BallStateData = null
 
 #设置一个方法来设置这些状态,添加Area2d后所有的状态逻辑都能访问它
-func setup(context_ball : Ball, context_player_detection_area : Area2D, context_carrier : Player, context_animation_player : AnimationPlayer, context_sprite : Sprite2D) -> void:
+func setup(context_ball : Ball, context_state_data: BallStateData, context_player_detection_area : Area2D, context_carrier : Player, context_animation_player : AnimationPlayer, context_sprite : Sprite2D) -> void:
 	#设置Ball对象
 	ball = context_ball
 	#设置赋值检测区域
@@ -31,6 +33,12 @@ func setup(context_ball : Ball, context_player_detection_area : Area2D, context_
 	animation_player = context_animation_player
 	#传递图片精灵引用对象
 	sprite = context_sprite
+	#状态数据
+	state_data = context_state_data
+
+#过度状态方法
+func transition_state(new_state: Ball.State, data: BallStateData = BallStateData.new()) -> void:
+	state_transition_requested.emit(new_state, data)
 
 func set_ball_animation_from_velocity() -> void:
 		#判断球的速度是否为0

@@ -1,6 +1,9 @@
 class_name Player
 extends CharacterBody2D
 
+#接收一个参数的信号
+signal swap_requested(player: Player)
+
 #创建一个常量
 const BALL_CONTROL_HEIGHT_MAX := 10.0
 #创建一个字典，各种模式方案

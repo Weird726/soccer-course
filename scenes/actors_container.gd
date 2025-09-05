@@ -10,9 +10,6 @@ const PLAYER_PREFAB := preload("res://scenes/characters/player.tscn")
 @export var ball : Ball
 @export var goal_home : Goal
 @export var goal_away : Goal
-#创建两个新的导出变量
-@export var team_home : String
-@export var team_away : String
 
 #创建一个未就绪变量来访问节点，这是一个二维节点
 @onready var spawns: Node2D = %Spawns
@@ -26,13 +23,13 @@ var time_since_last_cache_refresh := Time.get_ticks_msec()
 #在准备方法中，实例化队伍
 func _ready() -> void:
 	#创建一个生成玩家的方法并指定，队伍的名字与目标
-	squad_home = spawn_players(team_home, goal_home)
+	squad_home = spawn_players(GameManager.countries[0], goal_home)
 	#初始化
-	goal_home.initialize(team_home)
+	goal_home.initialize(GameManager.countries[0])
 	#交换X轴的比例以便生成客场球员
 	spawns.scale.x = -1
-	squad_away = spawn_players(team_away, goal_away)
-	goal_away.initialize(team_away)
+	squad_away = spawn_players(GameManager.countries[1], goal_away)
+	goal_away.initialize(GameManager.countries[1])
 	
 #创建一个用于测试的方法，来指定玩家
 	var player : Player = get_children().filter(func(p): return p is Player)[4]

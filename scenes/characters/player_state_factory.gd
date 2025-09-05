@@ -8,9 +8,12 @@ var states : Dictionary
 func _init() -> void:
 	states = {
 		Player.State.BLCYCLE_KICK:PlayerStateBicycleKick,
+		Player.State.CELEBRATING: PlayerStateCelebrating,
 		Player.State.CHEST_CONTROL:PlayerStateChestControl,
 		Player.State.DIVING: PlayerStateDiving,
 		Player.State.HURT:PlayerStateHurt,
+		Player.State.HEADER:PlayerStateHeader,
+		Player.State.MOURNING: PlayerStateMourning,
 		Player.State.MOVING:PlayerStateMoving,
 		Player.State.PASSING:PlayerStatePassing,
 		Player.State.PREPPING_SHOT:PlayerStatePreppingShot,
@@ -18,7 +21,7 @@ func _init() -> void:
 		Player.State.SHOOTING:PlayerStateShooting,
 		Player.State.TACKLING:PlayerStateTackling,
 		Player.State.VOLLEY_KICK:PlayerStateVolleyKick,
-		Player.State.HEADER:PlayerStateHeader,
+
 	}
 
 #获取新状态的方法，并返回一个玩家状态的实例

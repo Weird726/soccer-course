@@ -27,7 +27,7 @@ enum Role {GOALIE, DEFENSE, MIDFIELD, OFFENSE}
 #为肤色创建一个枚举,浅色，中等，深色
 enum SkinColor {LIGHT, MEDIUM, DARK}
 #为所有不同的状态添加一个枚举
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BLCYCLE_KICK, CHEST_CONTROL, HURT, DIVING}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BLCYCLE_KICK, CHEST_CONTROL, HURT, DIVING, CELEBRATING, MOURNING}
 #设置一个来自球的变量
 @export var ball : Ball
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
@@ -94,6 +94,8 @@ func _ready() -> void:
 	permanent_damage_emitter_area.body_entered.connect(on_tackle_player.bind())
 	#初始化存储位置为当前位置
 	spawn_position = position
+	#监听信号调用回调
+	GameEvents.team_scored.connect(on_team_scored.bind())
 
 #函数后面下划线可以消除警告
 func _process(delta: float) -> void:
@@ -256,6 +258,12 @@ func on_animation_complete() -> void:
 	if current_state != null:
 		#如果不为空处理动画完成状态
 		current_state.on_animation_complete()
+
+func on_team_scored(team_scored_on: String) -> void:
+	if country == team_scored_on:
+		switch_state(Player.State.MOURNING)
+	else:
+		switch_state(Player.State.CELEBRATING)
 
 func control_ball() -> void:
 	if ball.height > BALL_CONTROL_HEIGHT_MAX:

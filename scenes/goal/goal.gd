@@ -5,15 +5,27 @@ extends Node2D
 @onready var scoring_area: Area2D = %ScoringArea
 @onready var targets: Node2D = %Targets
 
+var country := ""
+
 #监听球何时进入该区域
 func _ready() -> void:
 	#添加一个监听器并创建一个函数（函数名的描述最好是非常清晰）用于监听
 	back_net_area.body_entered.connect(on_ball_enter_back_net.bind())
+	scoring_area.body_entered.connect(on_ball_enter_scoring_area.bind())
+
+#初始化方法
+func initialize(context_country: String) -> void:
+	country = context_country
 
 #球进入网里时的函数
 func on_ball_enter_back_net(ball: Ball) -> void:
 	#进入网格范围让球停止
 	ball.stop()
+
+#回调函数
+func on_ball_enter_scoring_area(_ball: Ball) -> void:
+	#发射信号
+	GameEvents.team_scored.emit(country)
 
 #可调用的方法,随机目标位置
 func get_random_target_position() -> Vector2:

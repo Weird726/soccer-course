@@ -62,11 +62,6 @@ func get_bicircular_weight(position: Vector2, center_target: Vector2, inner_circ
 		#创建插值（在内圈权重与外圈权重之间进行插值计算）
 		return lerpf(inner_circle_weight, outer_circle_weight, distance_to_inner_radius / close_range_distance)
 
-#创建一个球员面向方法(没有返回值的方法）
-func face_towards_target_goal() -> void:
-	if not player.is_facing_target_goal():
-		player.heading = player.heading * -1
-
 #用于判断对手控球状态的方法
 func is_ball_possessed_by_opponent() -> bool:
 	#返回值

@@ -9,6 +9,8 @@ const CELEBRATING_HEIGHT := 2.0
 
 func _enter_tree() -> void:
 	celebrate()
+	#监听队伍重置事件
+	GameEvents.team_reset.connect(on_team_reset.bind())
 
 func _process(delta: float) -> void:
 	#每当他们落地时，让他们再次庆祝
@@ -22,3 +24,6 @@ func celebrate() -> void:
 	player.height = 0.1
 	#提供初始速度
 	player.height_velocity = CELEBRATING_HEIGHT
+
+func on_team_reset() -> void:
+	transition_state(Player.State.RESETING, PlayerStateData.build().set_reset_position(player.spawn_position))

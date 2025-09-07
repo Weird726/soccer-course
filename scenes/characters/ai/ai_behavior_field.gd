@@ -51,7 +51,7 @@ func perform_ai_decisions() -> void:
 		#判断检查目标的距离，判断0~1的随机值是否小于来实现概念
 		if player.position.distance_to(target) < SHOT_DISTANCE and randf() < SHOT_PROBABILITY:
 			#创建方法
-			face_towards_target_goal()
+			player.face_towards_target_goal()
 			#射门方向变量
 			var shot_direction := player.position.direction_to(player.target_goal.get_random_target_position())
 			#设置射门方向，暂时当前射门朝向

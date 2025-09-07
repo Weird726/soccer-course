@@ -5,6 +5,8 @@ class_name PlayerStateData
 var hurt_direction: Vector2
 #代表一个球员
 var pass_target : Player
+#重置位置变量
+var reset_position : Vector2
 #创建一个射击方向变量，它是一个二维方向变量
 var shot_direction : Vector2
 #创建一个设计力度变量，它是一个浮点数
@@ -35,4 +37,8 @@ func set_hurt_direction(direction: Vector2) -> PlayerStateData:
 
 func set_pass_target(player: Player) -> PlayerStateData:
 	pass_target = player
+	return self
+
+func set_reset_position(position: Vector2) -> PlayerStateData:
+	reset_position = position
 	return self

@@ -48,7 +48,7 @@ y_sort_enabled = true
 script = ExtResource("5_e3hyu")
 ball = NodePath("Ball")
 goal_home = NodePath("PitchObjects/GoalHome")
-goal_away = NodePath("PitchObjects/Goal2Away")
+goal_away = NodePath("PitchObjects/GoalAway")
 
 [node name="Spawns" type="Node2D" parent="ActorsContainer"]
 unique_name_in_owner = true
@@ -72,13 +72,23 @@ position = Vector2(-25, -80)
 [node name="OffensePosition2" type="Node2D" parent="ActorsContainer/Spawns"]
 position = Vector2(-25, 80)
 
+[node name="KickOffs" type="Node2D" parent="ActorsContainer"]
+unique_name_in_owner = true
+position = Vector2(425, 180)
+
+[node name="KickOffPosition" type="Node2D" parent="ActorsContainer/KickOffs"]
+position = Vector2(-10, 0)
+
+[node name="KickOffPosition2" type="Node2D" parent="ActorsContainer/KickOffs"]
+position = Vector2(-5, 30)
+
 [node name="PitchObjects" type="Node2D" parent="ActorsContainer"]
 y_sort_enabled = true
 
 [node name="GoalHome" parent="ActorsContainer/PitchObjects" instance=ExtResource("5_i7141")]
 position = Vector2(32, 220)
 
-[node name="Goal2Away" parent="ActorsContainer/PitchObjects" instance=ExtResource("5_i7141")]
+[node name="GoalAway" parent="ActorsContainer/PitchObjects" instance=ExtResource("5_i7141")]
 position = Vector2(818, 220)
 scale = Vector2(-1, 1)
 
@@ -133,4 +143,4 @@ position = Vector2(-5, -6)
 polygon = PackedVector2Array(29, -1, 13, 116, 0, 116, 14, -1)
 
 [node name="Ball" parent="ActorsContainer" instance=ExtResource("5_71j4m")]
-position = Vector2(402, 106)
+position = Vector2(425, 180)

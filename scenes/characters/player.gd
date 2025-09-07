@@ -27,7 +27,7 @@ enum Role {GOALIE, DEFENSE, MIDFIELD, OFFENSE}
 #为肤色创建一个枚举,浅色，中等，深色
 enum SkinColor {LIGHT, MEDIUM, DARK}
 #为所有不同的状态添加一个枚举
-enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BLCYCLE_KICK, CHEST_CONTROL, HURT, DIVING, CELEBRATING, MOURNING}
+enum State {MOVING, TACKLING, RECOVERING, PREPPING_SHOT, SHOOTING, PASSING, HEADER, VOLLEY_KICK, BLCYCLE_KICK, CHEST_CONTROL, HURT, DIVING, CELEBRATING, MOURNING, RESETING}
 #设置一个来自球的变量
 @export var ball : Ball
 #创建一个变量来存储这个枚举，让它成为一个可导出变量
@@ -64,6 +64,8 @@ var heading := Vector2.RIGHT
 var height := 0.0
 #添加一个高度向量变量
 var height_velocity := 0.0
+#添加一个开球位置数据
+var kickoff_position := Vector2.ZERO
 #添加一个角色变量
 var role := Player.Role.MIDFIELD
 #皮肤颜色
@@ -120,9 +122,10 @@ func set_shader_properties() -> void:
 	player_sprite.material.set_shader_parameter("team_color", country_color)
 	
 #初始化方法,传入位置,球，球门.目标球门，数据,带有上下文的玩家资源
-func initialize(context_position: Vector2, context_ball: Ball, context_own_goal: Goal, context_target_goal: Goal,context_player_data: PlayerResource, context_country: String) -> void:
+func initialize(context_position: Vector2, context_kickoff_position: Vector2, context_ball: Ball, context_own_goal: Goal, context_target_goal: Goal,context_player_data: PlayerResource, context_country: String) -> void:
 		#初始化我们属性的所有值
 		position = context_position
+		kickoff_position = context_kickoff_position
 		ball = context_ball
 		own_goal = context_own_goal
 		target_goal = context_target_goal
@@ -198,6 +201,11 @@ func set_heading() -> void:
 	elif velocity.x < 0:
 		heading = Vector2.LEFT
 
+#创建一个球员面向方法(没有返回值的方法）
+func face_towards_target_goal() -> void:
+	if not is_facing_target_goal():
+		heading = heading * -1
+
 #人物动画方向控制方法 通过判断来控制图片的H属性旋转
 func flip_sprites() -> void:
 	if heading == Vector2.RIGHT:
@@ -222,6 +230,9 @@ func get_hurt(hurt_origin: Vector2) -> void:
 func has_ball() -> bool:
 	#返回携带球的玩家是否是当前玩家
 	return ball.carrier == self
+
+func is_ready_for_kickoff() -> bool:
+	return current_state != null and current_state.is_ready_for_kickoff()
 
 #接收玩家请求传球参数
 func get_pass_request(player: Player) -> void:

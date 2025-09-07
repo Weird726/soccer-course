@@ -32,6 +32,8 @@ var current_state : BallState = null
 var height := 0.0
 #新属性高度速度
 var height_velocity := 0.0
+#初始位置
+var spawn_position := Vector2.ZERO
 #引用状态工厂
 var state_factory := BallStateFactory.new()
 #私有的速度变量
@@ -41,6 +43,10 @@ var velocity := Vector2.ZERO
 func _ready() -> void:
 	#将状态切换到自由状态
 	switch_state(State.FREEFORM)
+	#记录位置
+	spawn_position = position
+	#监听全局事件(并创建一个回调方法）
+	GameEvents.team_reset.connect(on_team_reset.bind())
 
 #查看在哪里访问球体精灵的方法
 func _process(_sadelta: float) -> void:
@@ -115,3 +121,12 @@ func is_headed_for_scoring_area(scoring_area: Area2D) -> bool:
 	if not scoring_raycast.is_colliding():
 		return false
 	return scoring_raycast.get_collider() == scoring_area
+
+#创建回调方法
+func on_team_reset() -> void:
+	#把球的位置重置到生成位置
+	position = spawn_position
+	#并且让它停止移动
+	velocity = Vector2.ZERO
+	#设置强制状态(以防万一)
+	switch_state(State.FREEFORM)

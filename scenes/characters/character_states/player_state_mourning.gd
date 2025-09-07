@@ -5,3 +5,8 @@ func _enter_tree() -> void:
 	animation_player.play("mourn")
 	#突然停止表现悲剧效果
 	player.velocity = Vector2.ZERO
+	#监听队伍重置事件
+	GameEvents.team_reset.connect(on_team_reset.bind())
+
+func on_team_reset() -> void:
+	transition_state(Player.State.RESETING, PlayerStateData.build().set_reset_position(player.kickoff_position))

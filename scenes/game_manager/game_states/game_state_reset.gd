@@ -9,4 +9,4 @@ func _enter_tree() -> void:
 
 #转换到准备状态
 func on_kickoff_ready() -> void:
-	transition_state(GameManager.State.KICKOFF)
+	transition_state(GameManager.State.KICKOFF, state_data)

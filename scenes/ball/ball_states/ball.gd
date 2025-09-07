@@ -8,6 +8,7 @@ const DISTANCE_HIGH_PASS := 130
 #时间常量
 const DURATION_TUMBLE_LOCK := 200
 const DURATION_PASS_LOCK := 500
+const KICKOFF_PASS_DISTANCE := 30.0
 #下跌高度速度
 const TUMBLE_HEIGHT_VELOCITY := 3.0
 
@@ -47,6 +48,8 @@ func _ready() -> void:
 	spawn_position = position
 	#监听全局事件(并创建一个回调方法）
 	GameEvents.team_reset.connect(on_team_reset.bind())
+	#监听开始信号
+	GameEvents.Kickoff_started.connect(on_kickoff_started.bind())
 
 #查看在哪里访问球体精灵的方法
 func _process(_sadelta: float) -> void:
@@ -87,7 +90,7 @@ func tumble(tumble_velocity: Vector2) -> void:
 	switch_state(Ball.State.FREEFORM, BallStateData.build().set_lock_duration(DURATION_TUMBLE_LOCK))
 
 #设置一个速度方法，不会返回任何内容的向量
-func pass_to(destination: Vector2) -> void:
+func pass_to(destination: Vector2, lock_duration: int = DURATION_PASS_LOCK) -> void:
 	#传入两个摩擦力
 	var direction := position.direction_to(destination)
 	var distance := position.distance_to(destination)
@@ -98,7 +101,7 @@ func pass_to(destination: Vector2) -> void:
 	if distance > DISTANCE_HIGH_PASS:
 		height_velocity = BallState.GRAVITY * distance / (1.8 * intensity)
 	carrier = null
-	switch_state(Ball.State.FREEFORM, BallStateData.build().set_lock_duration(DURATION_PASS_LOCK))
+	switch_state(Ball.State.FREEFORM, BallStateData.build().set_lock_duration(lock_duration))
 
 #创建一个停止的方法
 func stop() -> void:
@@ -130,3 +133,8 @@ func on_team_reset() -> void:
 	velocity = Vector2.ZERO
 	#设置强制状态(以防万一)
 	switch_state(State.FREEFORM)
+
+#开球开始方法
+func on_kickoff_started() -> void:
+	#将球传送到出生位置，场地中央
+	pass_to(spawn_position + Vector2.DOWN * KICKOFF_PASS_DISTANCE, 0)

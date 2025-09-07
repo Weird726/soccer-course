@@ -84,8 +84,6 @@ func _ready() -> void:
 	set_control_texture()
 	#AI行为方法
 	setup_ai_behavior()
-	#将状态且黄岛.moving
-	switch_state(State.MOVING)
 	#一个所有子节点都可以用的函数
 	set_shader_properties()
 	#专为守门员的信号发射
@@ -98,6 +96,8 @@ func _ready() -> void:
 	spawn_position = position
 	#监听信号调用回调
 	GameEvents.team_scored.connect(on_team_scored.bind())
+	var initial_position := kickoff_position if country == GameManager.countries[0] else spawn_position
+	switch_state(State.RESETING, PlayerStateData.build().set_reset_position(initial_position))
 
 #函数后面下划线可以消除警告
 func _process(delta: float) -> void:
@@ -216,6 +216,13 @@ func flip_sprites() -> void:
 		player_sprite.flip_h = true
 		tackle_damage_emitter_area.scale.x = -1
 		opponent_detection_area.scale.x = -1
+
+#设置一个控制方案方法
+func set_control_scheme(scheme: ControlScheme) -> void:
+	#设置控制方案
+	control_scheme = scheme
+	#该方法用于更新精灵图
+	set_control_texture()
 
 #翻转精灵方法.可见或者不可见
 func set_sprite_visibility() -> void:

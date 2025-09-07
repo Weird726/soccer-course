@@ -22,6 +22,10 @@ var squad_away : Array[Player] = []
 #用于存储时间缓存刷新的变量
 var time_since_last_cache_refresh := Time.get_ticks_msec()
 
+func _init() -> void:
+	#监听全局重置事件
+	GameEvents.team_reset.connect(on_team_reset.bind())
+
 #在准备方法中，实例化队伍
 func _ready() -> void:
 	#创建一个生成玩家的方法并指定，队伍的名字与目标
@@ -34,15 +38,9 @@ func _ready() -> void:
 	kickoffs.scale.x = -1
 	squad_away = spawn_players(GameManager.countries[1], goal_away)
 	goal_away.initialize(GameManager.countries[1])
-	
-#创建一个用于测试的方法，来指定玩家
-	var player : Player = get_children().filter(func(p): return p is Player)[4]
-	player.control_scheme = Player.ControlScheme.P1
-	#设置正确纹理
-	player.set_control_texture()
-	#监听全局重置事件
-	GameEvents.team_reset.connect(on_team_reset.bind())
-	
+	#
+	setup_control_schemes()
+
 #检查时间的进程方法
 func _process(_delta: float) -> void:
 	#判断如果我们花费足够的时间该怎么办
@@ -128,13 +126,9 @@ func on_player_swap_request(requester: Player) -> void:
 		#首先判断请求内存者是玩家1还是玩家2
 		var player_control_scheme := requester.control_scheme
 		#存储完毕后执行交换(改为CPU控制方案)
-		requester.control_scheme = Player.ControlScheme.CPU
-		#调用设置纹理来控制头上的球员图标
-		requester.set_control_texture()
+		requester.set_control_scheme(Player.ControlScheme.CPU)
 		#同时交换最近的CPU球员,赋予存储的值
-		closest_cpu_to_ball.control_scheme = player_control_scheme
-		#调用设置纹理来控制头上的球员图标
-		closest_cpu_to_ball.set_control_texture()
+		closest_cpu_to_ball.set_control_scheme(player_control_scheme)
 
 func check_for_kickoff_readiness() -> void:
 	#遍历两个小队
@@ -144,9 +138,31 @@ func check_for_kickoff_readiness() -> void:
 			#检查玩家是否做好开球准备
 			if not player.is_ready_for_kickoff():
 				return
+	setup_control_schemes()
 	is_checking_for_kickoff_readiness = false
 	#如果上游的工作全部已完成，通知上游准备我们已做好开球准备(触发信号)
 	GameEvents.kickoff_ready.emit()
+
+#设置控制方案
+func setup_control_schemes() -> void:
+	#创建玩家P1国家以及变量
+	var p1_country := GameManager.player_setup[0]
+	#判断玩家是否是合作模式
+	if GameManager.is_coop():
+		#判断主队与客队的变量创建
+		var player_squad := squad_home if squad_home[0].country == p1_country else squad_away
+		#玩家球员控制方案
+		player_squad[4].set_control_scheme(Player.ControlScheme.P1)
+		player_squad[5].set_control_scheme(Player.ControlScheme.P2)
+	#判断如果不是合作模式，而是单人模式
+	elif GameManager.is_single_player():
+		var player_squad := squad_home if squad_home[0].country == p1_country else squad_away
+		player_squad[5].set_control_scheme(Player.ControlScheme.P1)
+	else: # versus
+		var p1_squad := squad_home if squad_home[0].contry == p1_country else squad_away
+		var p2_squad := squad_home if p1_squad == squad_away else squad_away
+		p1_squad[4].set_control_scheme(Player.ControlScheme.P1)
+		p2_squad[5].set_control_scheme(Player.ControlScheme.P2)
 
 #创建回调方法
 func on_team_reset() -> void:

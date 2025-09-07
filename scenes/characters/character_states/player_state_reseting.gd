@@ -3,6 +3,10 @@ extends PlayerState
 
 var has_arrived := false
 
+#监听全局信号
+func _enter_tree() -> void:
+		GameEvents.Kickoff_started.connect(on_kickoff_started.bind())
+
 func _process(_delta: float) -> void:
 	#判断是否到达
 	if not has_arrived:
@@ -21,3 +25,11 @@ func _process(_delta: float) -> void:
 		player.set_movemont_animation()
 		#同时设置确保朝向
 		player.set_heading()
+
+func is_ready_for_kickoff() -> bool:
+	return has_arrived
+
+#返回回调函数
+func on_kickoff_started() ->void:
+	#切换到移动状态
+	transition_state(Player.State.MOVING)

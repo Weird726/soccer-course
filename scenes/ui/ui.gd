@@ -29,6 +29,7 @@ func _ready() -> void:
 	GameEvents.score_changed.connect(on_score_changed.bind())
 	#球队重置事件
 	GameEvents.team_reset.connect(on_team_reset.bind())
+	GameEvents.game_over.connect(on_game_over.bind())
 
 func _process(_delta: float) -> void:
 	update_clock()
@@ -61,10 +62,20 @@ func on_ball_released() -> void:
 	player_label.text = ""
 
 func on_score_changed() -> void:
-	goal_score_label.text = "%s SCORED!" % [last_ball_carrier]
-	score_info_label.text = ScoreHelper.get_current_score_info(GameManager.countries, GameManager.score)
-	animation_player.play("goal_appear")
+	#只有在比赛时间结束时才播放此得分动画
+	if not GameManager.is_time_up():
+		goal_score_label.text = "%s SCORED!" % [last_ball_carrier]
+		score_info_label.text = ScoreHelper.get_current_score_info(GameManager.countries, GameManager.score)
+		animation_player.play("goal_appear")
 	update_score()
 
 func on_team_reset() -> void:
-	animation_player.play("goal_hide")
+	if GameManager.has_someone_scored():
+		animation_player.play("goal_hide")
+
+#回调函数
+func on_game_over(_country_winner: String) -> void:
+	#更新得分信息标签的文本
+	score_info_label.text = ScoreHelper.get_final_score_info(GameManager.countries, GameManager.score)
+	#播放正确的动画
+	animation_player.play("game_over")

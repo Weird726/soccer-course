@@ -8,9 +8,9 @@ func _enter_tree() -> void:
 func _process(delta: float) -> void:
 	#处理时间实现倒计时功能
 	manager.time_left -= delta
-	if manager.time_left <= 0:
+	if manager.is_time_up():
 		#判断比分是否持平，持平进入加时赛
-		if manager.score[0] == manager.score[1]:
+		if manager.is_game_tied():
 			transition_state(GameManager.State.OVERTIME)
 		else:
 			transition_state(GameManager.State.GAMEOVER)

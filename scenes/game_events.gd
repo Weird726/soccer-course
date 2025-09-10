@@ -5,6 +5,8 @@ extends Node
 signal ball_possessed(player_name: String)
 #球的拥有者公布
 signal ball_released
+#游戏结束事件(参数传入获胜国家)
+signal game_over(country_winner: String)
 #准备就绪，可以开始信号
 signal kickoff_ready
 #创建信号，开球开始

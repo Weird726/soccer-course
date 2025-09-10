@@ -96,6 +96,7 @@ func _ready() -> void:
 	spawn_position = position
 	#监听信号调用回调
 	GameEvents.team_scored.connect(on_team_scored.bind())
+	GameEvents.game_over.connect(on_game_over.bind())
 	var initial_position := kickoff_position if country == GameManager.countries[0] else spawn_position
 	switch_state(State.RESETING, PlayerStateData.build().set_reset_position(initial_position))
 
@@ -282,6 +283,12 @@ func on_team_scored(team_scored_on: String) -> void:
 		switch_state(Player.State.MOURNING)
 	else:
 		switch_state(Player.State.CELEBRATING)
+
+func on_game_over(winning_team: String) -> void:
+	if country == winning_team:
+		switch_state(Player.State.CELEBRATING)
+	else:
+		switch_state(Player.State.MOURNING)
 
 func control_ball() -> void:
 	if ball.height > BALL_CONTROL_HEIGHT_MAX:

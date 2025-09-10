@@ -145,6 +145,8 @@ func check_for_kickoff_readiness() -> void:
 
 #设置控制方案
 func setup_control_schemes() -> void:
+	#重置控制方案方法
+	reset_control_schemes()
 	#创建玩家P1国家以及变量
 	var p1_country := GameManager.player_setup[0]
 	#判断玩家是否是合作模式
@@ -163,6 +165,14 @@ func setup_control_schemes() -> void:
 		var p2_squad := squad_home if p1_squad == squad_away else squad_away
 		p1_squad[4].set_control_scheme(Player.ControlScheme.P1)
 		p2_squad[5].set_control_scheme(Player.ControlScheme.P2)
+
+func reset_control_schemes() -> void:
+	#遍历所有球员(从客场球队开始)
+	for squad in [squad_home, squad_away]:
+		#遍历所有球员
+		for player: Player in squad:
+			#重置它们的控制方案为CPU
+			player.set_control_scheme(Player.ControlScheme.CPU)
 
 #创建回调方法
 func on_team_reset() -> void:

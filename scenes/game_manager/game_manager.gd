@@ -36,3 +36,26 @@ func is_coop() -> bool:
 #判断是否是单人方法
 func is_single_player() -> bool:
 	return player_setup[1].is_empty()
+
+#比赛平局的方法
+func is_game_tied() -> bool:
+	return score[0] == score[1]
+
+#判断比赛是否结束的方法
+func is_time_up() -> bool:
+	return time_left <= 0
+
+#辅助函数
+func get_winner_country() -> String:
+	#断言不是平局返回空字符串
+	assert(not is_game_tied())
+	return countries[0] if score[0] > score[1] else countries[1]
+
+#创建一个增加分数的方法(该方法接收国家分数作为参数)
+func increase_score(country_scored_on: String) -> void:
+	var index_country_scoring := 1 if country_scored_on == countries[0] else 0
+	score[index_country_scoring] += 1
+	GameEvents.score_changed.emit()
+
+func has_someone_scored() -> bool:
+	return score[0] > 0 or score[1] > 0

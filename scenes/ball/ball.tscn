@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://07m0iibryhtg"]
+[gd_scene load_steps=15 format=3 uid="uid://07m0iibryhtg"]
 
 [ext_resource type="Texture2D" uid="uid://c7ur8skn4f8du" path="res://assets/art/props/soccer-ball.png" id="1_oqv3d"]
 [ext_resource type="Script" uid="uid://ch73uksc85uh2" path="res://scenes/ball/ball_states/ball.gd" id="1_stoaj"]
@@ -85,6 +85,9 @@ _data = {
 [sub_resource type="CircleShape2D" id="CircleShape2D_nv6q1"]
 radius = 4.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_xotqv"]
+radius = 60.0
+
 [node name="Ball" type="AnimatableBody2D"]
 collision_layer = 4
 collision_mask = 33
@@ -125,14 +128,14 @@ texture = ExtResource("2_nv6q1")
 centered = false
 offset = Vector2(-8, -16)
 
-[node name="PlayerDectectionArea" type="Area2D" parent="."]
+[node name="PlayerDetectionArea" type="Area2D" parent="."]
 unique_name_in_owner = true
 position = Vector2(0, -5)
 collision_layer = 0
 collision_mask = 2
 monitorable = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDectectionArea"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetectionArea"]
 shape = SubResource("CircleShape2D_nv6q1")
 
 [node name="ScoringRaycast" type="RayCast2D" parent="."]
@@ -142,3 +145,13 @@ target_position = Vector2(80, 0)
 collision_mask = 16
 collide_with_areas = true
 collide_with_bodies = false
+
+[node name="PlayerProximityArea" type="Area2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -5)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerProximityArea"]
+shape = SubResource("CircleShape2D_xotqv")

@@ -32,6 +32,7 @@ func perform_ai_movement() -> void:
 				#自由的向球移动
 			elif ball.carrier == null:
 				total_steering_force += get_ball_proximity_steering_force()
+				total_steering_force += get_density_around_ball_steering_force()
 
 	#限制转向向量的长度
 	total_steering_force = total_steering_force.limit_length(1.0)
@@ -102,6 +103,20 @@ func get_ball_proximity_steering_force() -> Vector2:
 func get_spawn_steering_force() -> Vector2:
 	var weight := get_bicircular_weight(player.position, player.spawn_position, 30, 0, 100, 1)
 	var direction := player.position.direction_to(player.spawn_position)
+	return weight * direction
+
+#计算球周围作用里力的方法
+func get_density_around_ball_steering_force() -> Vector2:
+	#首先计算球附近的队友数量(并传入玩家所属国家参数)
+	var nb_teammates_near_ball := ball.get_proximity_teammates_count(player.country)
+	#如果没有队友在附近，该作用力就为0
+	if nb_teammates_near_ball == 0:
+		return Vector2.ZERO
+	#计算权重
+	var weight := 1 - 1.0 / nb_teammates_near_ball
+	#计算方向(并创建一个作用力使玩家远离足球
+	var direction := ball.position.direction_to(player.position)
+	#按照惯例，返回权重 * 方向向量
 	return weight * direction
 
 #有队友在视图的情况下

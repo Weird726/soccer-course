@@ -17,6 +17,8 @@ func _enter_tree() -> void:
 	if ball.carrier == player:
 		#球的下跌速度
 		ball.tumble(state_data.hurt_direction * BALL_TUMBLE_SPEED)
+		#如果持球者是此球员在此发射粒子效果事件,在玩家位置创建一个火花效果
+		GameEvents.impact_received.emit(player.position, false)
 
 func _process(delta: float) -> void:
 	#检查以流失的时间是否超过1秒

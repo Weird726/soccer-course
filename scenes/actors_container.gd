@@ -5,6 +5,8 @@ extends Node2D
 const DURATION_WEIGHT_CACHE := 200
 #场景中玩家的引用以便实例化
 const PLAYER_PREFAB := preload("res://scenes/characters/player.tscn")
+#获取场景对象本身的引用
+const SPARK_PREFAB := preload("res://scenes/spark/spark.tscn")
 
 #创建相关引用，访问球，访问主场和客场的引用
 @export var ball : Ball
@@ -25,6 +27,8 @@ var time_since_last_cache_refresh := Time.get_ticks_msec()
 func _init() -> void:
 	#监听全局重置事件
 	GameEvents.team_reset.connect(on_team_reset.bind())
+	#监听引用的粒子效果事件
+	GameEvents.impact_received.connect(on_impact_received.bind())
 
 #在准备方法中，实例化队伍
 func _ready() -> void:
@@ -177,3 +181,12 @@ func reset_control_schemes() -> void:
 #创建回调方法
 func on_team_reset() -> void:
 	is_checking_for_kickoff_readiness = true
+
+#撞击处理特效方法，接受两个参数1.火花处理参数 2.是否需要镜头震动
+func on_impact_received(impact_position: Vector2, _is_high_impact: bool) -> void:
+	#创建粒子变量对象
+	var spark := SPARK_PREFAB.instantiate()
+	#将参数放置在正确位置
+	spark.position = impact_position
+	#将其作为子对象加入add_child,为了在场景中正确的Y轴排序
+	add_child(spark)

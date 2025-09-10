@@ -1,5 +1,7 @@
 extends Node
 
+#持续时间影响暂停
+const DURATION_IMPACT_PAUSE := 100
 const DURATION_GAME_SEC := 2 * 60
 
 #创建一个枚举状态
@@ -12,11 +14,25 @@ var player_setup : Array[String] = ["FRANCE", ""]
 var score : Array[int] = [0, 0]
 var state_factory := GameStateFactory.new()
 var time_left : float
+#记录时间的变量
+var time_since_paused := Time.get_ticks_msec()
 
 func _ready() -> void:
 	#将剩余时间设为比赛时长
 	time_left = DURATION_GAME_SEC
+	#监听事件创建回调函数
+	GameEvents.impact_received.connect(on_impact_received.bind())
 	switch_state(State.RESET)
+
+func _init() -> void:
+	#设置进程模式始终运行
+	process_mode = ProcessMode.PROCESS_MODE_ALWAYS
+
+func _process(_delta: float) -> void:
+	#检查是否处于暂停状态,检查暂停时间是否超过100毫秒
+	if get_tree().paused and Time.get_ticks_msec() - time_since_paused > DURATION_IMPACT_PAUSE:
+		#解除暂停
+		get_tree().paused = false
 
 #调用一个默认值就不用修改所有调用此方法的地方
 func switch_state(state: State, data: GameStateData = GameStateData.new()) -> void:
@@ -59,3 +75,12 @@ func increase_score(country_scored_on: String) -> void:
 
 func has_someone_scored() -> bool:
 	return score[0] > 0 or score[1] > 0
+
+#此回调函数需要参数，判断高强度撞击，影响的位置
+func on_impact_received(_impact_position: Vector2, is_high_impact: bool) -> void:
+	#判断是否是高强度撞击
+	if is_high_impact:
+		#每次暂停时记录开始时间
+		time_since_paused = Time.get_ticks_msec()
+		#暂停游戏
+		get_tree().paused = true

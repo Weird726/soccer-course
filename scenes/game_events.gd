@@ -11,6 +11,8 @@ signal game_over(country_winner: String)
 signal kickoff_ready
 #创建信号，开球开始
 signal Kickoff_started
+#受到的影响信号(粒子),拥有两个参数1.冲击发生的位置 2.是否高冲击
+signal impact_received(impact_position: Vector2, is_high_impact: bool)
 #分数变化信号
 signal score_changed
 #队伍重置信号

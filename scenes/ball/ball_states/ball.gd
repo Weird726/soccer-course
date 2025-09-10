@@ -24,6 +24,7 @@ enum State {CARRIED, FREEFORM, SHOT}
 @onready var ball_sprite: Sprite2D = %BallSprite
 @onready var player_dectection_area: Area2D = %PlayerDectectionArea
 @onready var scoring_raycast: RayCast2D = %ScoringRaycast
+@onready var shot_particles: GPUParticles2D = %ShotParticles
 
 #类型为玩家的携带者属性
 var carrier : Player = null
@@ -66,7 +67,7 @@ func switch_state(state: Ball.State, data: BallStateData = BallStateData.new()) 
 	#然后创建一个新的状态
 	current_state = state_factory.get_fresh_state(state)
 	#设置运行方法（尽在此处传递这个方法）
-	current_state.setup(self, data, player_dectection_area, carrier, animation_player, ball_sprite)
+	current_state.setup(self, data, player_dectection_area, carrier, animation_player, ball_sprite, shot_particles)
 	#连接到状态转换请求,连接到刚创建的状态切换方法
 	current_state.state_transition_requested.connect(switch_state.bind())
 	#最后为其命名，方便进行调试 球状态机

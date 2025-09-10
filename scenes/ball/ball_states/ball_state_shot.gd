@@ -21,6 +21,11 @@ func _enter_tree() -> void:
 	ball.height = SHOT_HEIGHT
 	#作为入口树的一部分并重置时间
 	time_since_shot = Time.get_ticks_msec()
+	#进入该状态开始发射粒子
+	shot_particles.emitting = true
+	#发射事件
+	GameEvents.impact_received.emit(ball.position, true)
+
 #处理方法
 func _process(delta: float) -> void:
 	#检查已经过去了多少时间,如果超过一秒
@@ -34,3 +39,4 @@ func _process(delta: float) -> void:
 #退出树该状态
 func _exit_tree() -> void:
 	sprite.scale.y = 1.0
+	shot_particles.emitting = false

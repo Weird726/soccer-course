@@ -21,8 +21,8 @@ func _enter_tree() -> void:
 		valid_control_schemes.append(Player.ControlScheme.P1)
 
 func _process(_delta: float) -> void:
-	for control_schemes : Player.ControlScheme in valid_control_schemes:
-		if KeyUtils.is_action_just_pressed(control_schemes, KeyUtils.Action.PASS):
+	for control_scheme : Player.ControlScheme in valid_control_schemes:
+		if KeyUtils.is_action_just_pressed(control_scheme, KeyUtils.Action.PASS):
 			#发送开球信号
 			GameEvents.Kickoff_started.emit()
 			transition_state(GameManager.State.IN_PLAY)

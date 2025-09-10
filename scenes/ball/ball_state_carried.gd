@@ -14,6 +14,8 @@ var dribble_time := 0.0
 func _enter_tree() -> void:
 	#检查携带者是否为空
 	assert(carrier != null)
+	#发送信号传递玩家姓名
+	GameEvents.ball_possessed.emit(carrier.fullname)
 
 #设置球的位置方法
 func _process(delta: float) -> void:
@@ -41,3 +43,7 @@ func _process(delta: float) -> void:
 		process_gravity(delta)
 	#设置为携带者的位置,增加一个偏移量
 	ball.position = carrier.position + Vector2(vx + carrier.heading.x * OFFSET_FROM_PLAYER.x, OFFSET_FROM_PLAYER.y)
+
+#发送第二个信号
+func _exit_tree() -> void:
+	GameEvents.ball_released.emit()

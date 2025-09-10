@@ -43,7 +43,7 @@ func handle_human_movement() -> void:
 			#过渡到预设门状态
 			transition_state(Player.State.PREPPING_SHOT)
 		#球体本身创造一个方法进行询问，你属于什么状态(判断是你是否是空中交互状态）
-		if ball.can_air_interact():
+		elif ball.can_air_interact():
 		#判断玩家的速度是否为0
 			if player.velocity == Vector2.ZERO:
 				#判断我们如果面向目标
@@ -52,7 +52,7 @@ func handle_human_movement() -> void:
 					transition_state(Player.State.VOLLEY_KICK)
 				else:
 					#进入倒挂射门状态
-					transition_state(Player.State.BLCYCLE_KICK)
+					transition_state(Player.State.BICYCLE_KICK)
 			else:
 				#切换到头球状态
 				transition_state(Player.State.HEADER)

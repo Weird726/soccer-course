@@ -29,9 +29,9 @@ func _process(delta: float) -> void:
 			#额外功能,记录时间
 			time_finish_tackle = Time.get_ticks_msec()
 			#检查是否在这个状态停留了足够的时间
-		elif Time.get_ticks_msec() - time_finish_tackle > DURATION_PRIOR_RECOVERY:
-			#如果是就会转换到玩家的移动状态
-			transition_state(Player.State.RECOVERING)
+	elif Time.get_ticks_msec() - time_finish_tackle > DURATION_PRIOR_RECOVERY:
+		#如果是就会转换到玩家的移动状态
+		transition_state(Player.State.RECOVERING)
 
 #退出状态后的停止监控方法
 func _exit_tree() -> void:

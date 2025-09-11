@@ -17,6 +17,8 @@ func _enter_tree() -> void:
 	if ball.carrier == player:
 		#球的下跌速度
 		ball.tumble(state_data.hurt_direction * BALL_TUMBLE_SPEED)
+		#播放音效
+		SoundPlayer.play(SoundPlayer.Sound.HURT)
 		#如果持球者是此球员在此发射粒子效果事件,在玩家位置创建一个火花效果
 		GameEvents.impact_received.emit(player.position, false)
 

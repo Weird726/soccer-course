@@ -22,6 +22,8 @@ func on_ball_entered(contact_ball: Ball) -> void:
 		var destination := target_goal.get_random_target_position()
 		#创建一个方向向量,球从当前位置朝目的地移动的方向,(归一化的向量）
 		var direction := ball.position.direction_to(destination)
+		#播放音效
+		SoundPlayer.play(SoundPlayer.Sound.POWERSHOT)
 		#用方向向量将球发射出去，然后与玩家的力量相乘
 		contact_ball.shoot(direction * player.power * BONUS_POWER)
 

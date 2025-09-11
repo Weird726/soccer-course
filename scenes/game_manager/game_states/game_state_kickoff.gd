@@ -25,4 +25,6 @@ func _process(_delta: float) -> void:
 		if KeyUtils.is_action_just_pressed(control_scheme, KeyUtils.Action.PASS):
 			#发送开球信号
 			GameEvents.Kickoff_started.emit()
+			#按下按键播放音效
+			SoundPlayer.play(SoundPlayer.Sound.WHISTLE)
 			transition_state(GameManager.State.IN_PLAY)

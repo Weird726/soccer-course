@@ -86,6 +86,8 @@ func move_and_bounce(delta: float) -> void:
 	if collision != null:
 		#让球反弹,调整球的速度（这个bounce的用法需要指定法线)
 		ball.velocity = ball.velocity.bounce(collision.get_normal()) * ball.BOUNCINESS
+		#播放音效
+		SoundPlayer.play(SoundPlayer.Sound.BOUNCE)
 		#防止效果成为强力射出，所以切换为自由状态
 		ball.switch_state(Ball.State.FREEFORM)
 

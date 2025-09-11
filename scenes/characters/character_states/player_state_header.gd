@@ -25,6 +25,8 @@ func _enter_tree() -> void:
 func on_ball_entered(contact_ball: Ball) -> void:
 	#判断我们是否与球体建立连接
 	if  contact_ball.can_air_connect(BALL_HEIGHT_MIN, BALL_HEIGHT_MAX):
+		#播放音效
+		SoundPlayer.play(SoundPlayer.Sound.POWERSHOT)
 		#玩家的向量 * 归一化的值 * 额外奖励
 		contact_ball.shoot(player.velocity.normalized() * player.power * BONUS_POWER)
 

@@ -24,6 +24,8 @@ func on_ball_enter_back_net(ball: Ball) -> void:
 
 #回调函数
 func on_ball_enter_scoring_area(_ball: Ball) -> void:
+	#播放音效
+	SoundPlayer.play(SoundPlayer.Sound.WHISTLE)
 	#发射信号
 	GameEvents.team_scored.emit(country)
 

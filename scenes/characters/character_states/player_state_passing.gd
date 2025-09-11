@@ -6,6 +6,8 @@ func _enter_tree() -> void:
 	animation_player.play("kick")
 	#阻止玩家移动
 	player.velocity = Vector2.ZERO
+	#播放音效
+	SoundPlayer.play(SoundPlayer.Sound.PASS)
 
 #监听器方法
 func on_animation_complete() -> void:

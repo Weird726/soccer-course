@@ -1,5 +1,7 @@
 extends Node
 
+#加载国家数据的变量引用
+var countries : Array[String] = ["DEFAULT"]
 #此变量包含所有玩家变量数据：使用的是字典{字符串国家名字，值是玩家的列表，
 var squads : Dictionary[String, Array]
 
@@ -22,6 +24,7 @@ func _init() -> void:
 	for team in json.data:
 		#解析第一个字典的两个键
 		var country_name := team["country"] as String
+		countries.append(country_name)
 		var players := team["players"] as Array
 		#检查一下是否已经有了顶级条目那个键
 		if not squads.has(country_name):
@@ -51,3 +54,7 @@ func get_squad(country: String) -> Array:
 		return squads[country]
 	#判断用于如果文件不存在，抛出一个错误,返回一个空数组
 	return []
+
+#此方法用于访问国家列表
+func get_countries() -> Array[String]:
+	return countries

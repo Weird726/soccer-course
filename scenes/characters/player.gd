@@ -12,9 +12,6 @@ const CONTROL_SCHEME_MAP : Dictionary = {
 	ControlScheme.P1: preload("res://assets/art/props/1p.png"),
 	ControlScheme.P2: preload("res://assets/art/props/2p.png"),
 }
-
-#添加一个常量，只列出国家名单,它将是一个数组类型
-const COUNTRIES := ["DEFAULT", "FRANCE", "ARGENTINA", "BRAZIL", "ENGLAND", "GERMANY", "ITALY", "SPAIN", "USA"]
 #重力常量
 const GRAVITY := 8.0
 #设置一个步行记忆阈值常量
@@ -117,10 +114,12 @@ func _process(delta: float) -> void:
 func set_shader_properties() -> void:
 	#调用玩家精灵并且影响材质,此处还要一个设置着色器的方法 国家
 	player_sprite.material.set_shader_parameter("skin_color", skin_color)
+	#从数据加载器获取国家列表
+	var countries := DataLoader.get_countries()
 	#选择国家的颜色,实际调用查找方法(如果期间数据出现错误将返回-1)
-	var country_color := COUNTRIES.find(country)
+	var country_color := countries.find(country)
 	#国家的颜色生成限制在一个数之间
-	country_color = clampi(country_color, 0, COUNTRIES.size() - 1)
+	country_color = clampi(country_color, 0, countries.size() - 1)
 	#调用玩家精灵并且影响材质,此处还要一个设置着色器的方法 队伍
 	player_sprite.material.set_shader_parameter("team_color", country_color)
 	

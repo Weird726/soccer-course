@@ -36,12 +36,14 @@ func _process(_delta: float) -> void:
 
 func update_score() -> void:
 	#设置分数标签文本
-	score_label.text = ScoreHelper.get_score_text(GameManager.score)
+	score_label.text = ScoreHelper.get_score_text(GameManager.current_match)
 
 func update_flags() -> void:
 	#遍历所有旗帜节点
 	for i in flag_textures.size():
-		flag_textures[i].texture = FlagHelper.get_texture(GameManager.countries[i])
+		#直接创建数组
+		var countries := [GameManager.current_match.country_home, GameManager.current_match.country_away]
+		flag_textures[i].texture = FlagHelper.get_texture(countries[i])
 
 func update_clock() -> void:
 	#检查是否还有剩余时间
@@ -65,17 +67,17 @@ func on_score_changed() -> void:
 	#只有在比赛时间结束时才播放此得分动画
 	if not GameManager.is_time_up():
 		goal_score_label.text = "%s SCORED!" % [last_ball_carrier]
-		score_info_label.text = ScoreHelper.get_current_score_info(GameManager.countries, GameManager.score)
+		score_info_label.text = ScoreHelper.get_current_score_info(GameManager.current_match)
 		animation_player.play("goal_appear")
 	update_score()
 
 func on_team_reset() -> void:
-	if GameManager.has_someone_scored():
+	if GameManager.current_match.has_someone_scored():
 		animation_player.play("goal_hide")
 
 #回调函数
 func on_game_over(_country_winner: String) -> void:
 	#更新得分信息标签的文本
-	score_info_label.text = ScoreHelper.get_final_score_info(GameManager.countries, GameManager.score)
+	score_info_label.text = ScoreHelper.get_final_score_info(GameManager.current_match)
 	#播放正确的动画
 	animation_player.play("game_over")

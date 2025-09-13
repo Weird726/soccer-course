@@ -7,7 +7,7 @@ func _enter_tree() -> void:
 	#创建一个得分方的国家数据变量
 	var country_starting := state_data.country_scored_on
 	if country_starting.is_empty():
-		country_starting = manager.countries[0]
+		country_starting = manager.current_match.country_home
 	#判断开球玩家是否为玩家1的国家
 	if country_starting == manager.player_setup[0]:
 		#如果是，将添加有效控制方案

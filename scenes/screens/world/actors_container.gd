@@ -33,15 +33,15 @@ func _init() -> void:
 #在准备方法中，实例化队伍
 func _ready() -> void:
 	#创建一个生成玩家的方法并指定，队伍的名字与目标
-	squad_home = spawn_players(GameManager.countries[0], goal_home)
+	squad_home = spawn_players(GameManager.current_match.country_home, goal_home)
 	#初始化
-	goal_home.initialize(GameManager.countries[0])
+	goal_home.initialize(GameManager.current_match.country_home)
 	#交换X轴的比例以便生成客场球员
 	spawns.scale.x = -1
 	#首先确保处理客队时X值缩放为-1
 	kickoffs.scale.x = -1
-	squad_away = spawn_players(GameManager.countries[1], goal_away)
-	goal_away.initialize(GameManager.countries[1])
+	squad_away = spawn_players(GameManager.current_match.country_away, goal_away)
+	goal_away.initialize(GameManager.current_match.country_away)
 	#
 	setup_control_schemes()
 

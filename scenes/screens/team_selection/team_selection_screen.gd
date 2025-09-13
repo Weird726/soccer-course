@@ -113,6 +113,6 @@ func on_selector_selected() -> void:
 	#检查是否为双人模式,检查两个玩家选择的旗帜是否不同
 	if not country_p2.is_empty() and country_p1 != country_p2:
 		#开始游戏设置,玩家2左侧主队，玩家1右侧客队
-		GameManager.countries = [country_p2, country_p1]
+		GameManager.current_match = Match.new(country_p2, country_p1)
 		#可以切换到游戏界面
 		transition_screen(SoccerGame.ScreenType.IN_GAME)

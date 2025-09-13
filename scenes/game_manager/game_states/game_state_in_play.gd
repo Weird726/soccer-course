@@ -10,7 +10,7 @@ func _process(delta: float) -> void:
 	manager.time_left -= delta
 	if manager.is_time_up():
 		#判断比分是否持平，持平进入加时赛
-		if manager.is_game_tied():
+		if manager.current_match.is_tied():
 			transition_state(GameManager.State.OVERTIME)
 		else:
 			transition_state(GameManager.State.GAMEOVER)

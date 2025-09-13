@@ -22,7 +22,6 @@ func _ready() -> void:
 	time_left = DURATION_GAME_SEC
 	#监听事件创建回调函数
 	GameEvents.impact_received.connect(on_impact_received.bind())
-	switch_state(State.RESET)
 
 func _init() -> void:
 	#设置进程模式始终运行
@@ -33,6 +32,10 @@ func _process(_delta: float) -> void:
 	if get_tree().paused and Time.get_ticks_msec() - time_since_paused > DURATION_IMPACT_PAUSE:
 		#解除暂停
 		get_tree().paused = false
+
+#重置状态转换方法
+func start_game() -> void:
+	switch_state(State.RESET)
 
 #调用一个默认值就不用修改所有调用此方法的地方
 func switch_state(state: State, data: GameStateData = GameStateData.new()) -> void:

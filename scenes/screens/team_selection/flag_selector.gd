@@ -1,6 +1,9 @@
 class_name FlagSelector
 extends Control
 
+#用于指示选择完成的新信号
+signal selected
+
 @onready var animation_player: AnimationPlayer = %AnimationPlayer
 @onready var indicator_1p: TextureRect = %Indicator1P
 @onready var indicator_2p: TextureRect = %Indicator2P
@@ -22,6 +25,8 @@ func _process(_delta: float) -> void:
 		is_selected = true
 		animation_player.play("selected")
 		SoundPlayer.play(SoundPlayer.Sound.UI_SELECT)
+		#发射信号
+		selected.emit()
 	elif is_selected and KeyUtils.is_action_just_pressed(control_scheme, KeyUtils.Action.PASS):
 		is_selected = false
 		animation_player.play("selecting")

@@ -1,5 +1,5 @@
 class_name TeamSelectionScreen
-extends Control
+extends Screen
 
 #锚点常量
 const FLAG_ANCHOR_POINT := Vector2(35, 80)
@@ -43,6 +43,11 @@ func _process(_delta: float) -> void:
 				if KeyUtils.is_action_just_pressed(selector.control_scheme, action):
 					#如果按下右键左上角的选择器向右移动一格
 					try_navigate(i, move_dirs[action])
+	#判断玩家是否未做选择从而返回主菜单界面
+	if not selectors[0].is_selected and KeyUtils.is_action_just_pressed(Player.ControlScheme.P1, KeyUtils.Action.PASS):
+		#播放一个导航音效
+		SoundPlayer.play(SoundPlayer.Sound.UI_NAV)
+		transition_screen(SoccerGame.ScreenType.MAIN_MENU)
 
 func try_navigate(selector_index: int, direction: Vector2i) -> void:
 	#使用矩形类型
@@ -52,6 +57,8 @@ func try_navigate(selector_index: int, direction: Vector2i) -> void:
 		selection[selector_index] += direction
 		#旗帜索引
 		var flag_index := selection[selector_index].x + selection[selector_index].y * NB_COLS
+		#获取玩家p1选择的国旗索引
+		GameManager.player_setup[selector_index] = DataLoader.get_countries()[1 + flag_index]
 		#设置选择器的位置
 		selectors[selector_index].position = flags_container.get_child(flag_index).position
 		#为导航添加音效
@@ -87,7 +94,25 @@ func add_selector(control_scheme: Player.ControlScheme) -> void:
 	var selector := FLAG_SELECTOR_PREFAB.instantiate()
 	selector.position = flags_container.get_child(0).position
 	selector.control_scheme = control_scheme
+	#监听选择信号
+	selector.selected.connect(on_selector_selected.bind())
 	#将选择器添加到选择器数组中
 	selectors.append(selector)
 	#作为国旗容器的一部分添加
 	flags_container.add_child(selector)
+
+func on_selector_selected() -> void:
+	#遍历所有选择器，如果有未选择的就直接返回
+	for selector in selectors:
+		if not selector.is_selected:
+			return
+	#获取国家信息
+	var country_p1 := GameManager.player_setup[0]
+	#单人模式下玩家2为null
+	var country_p2 := GameManager.player_setup[1]
+	#检查是否为双人模式,检查两个玩家选择的旗帜是否不同
+	if not country_p2.is_empty() and country_p1 != country_p2:
+		#开始游戏设置,玩家2左侧主队，玩家1右侧客队
+		GameManager.countries = [country_p2, country_p1]
+		#可以切换到游戏界面
+		transition_screen(SoccerGame.ScreenType.IN_GAME)

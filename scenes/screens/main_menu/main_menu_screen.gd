@@ -1,5 +1,5 @@
 class_name MainMenuScreen
-extends Control
+extends Screen
 
 #菜单纹理常量,这是个多维数组
 const MENU_TEXTURES := [
@@ -59,6 +59,8 @@ func submit_selection() -> void:
 	var country_default := DataLoader.get_countries()[1]
 	var player_two := "" if current_selected_index == 0 else country_default
 	GameManager.player_setup = [country_default, player_two]
+	#跳转界面
+	transition_screen(SoccerGame.ScreenType.TEAM_SELECTION)
 
 #回调函数
 func on_set_active() -> void:

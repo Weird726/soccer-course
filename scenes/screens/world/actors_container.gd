@@ -165,7 +165,7 @@ func setup_control_schemes() -> void:
 		var player_squad := squad_home if squad_home[0].country == p1_country else squad_away
 		player_squad[5].set_control_scheme(Player.ControlScheme.P1)
 	else: # versus
-		var p1_squad := squad_home if squad_home[0].contry == p1_country else squad_away
+		var p1_squad := squad_home if squad_home[0].country == p1_country else squad_away
 		var p2_squad := squad_home if p1_squad == squad_away else squad_away
 		p1_squad[4].set_control_scheme(Player.ControlScheme.P1)
 		p2_squad[5].set_control_scheme(Player.ControlScheme.P2)

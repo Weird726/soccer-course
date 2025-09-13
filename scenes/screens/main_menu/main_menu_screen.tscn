@@ -245,17 +245,10 @@ _data = {
 &"rotate": SubResource("Animation_du1io")
 }
 
-[node name="MainMenuScreen" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="MainMenuScreen" type="Node"]
 script = ExtResource("1_ai35v")
 
 [node name="Background" type="TextureRect" parent="."]
-layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 texture = ExtResource("1_vkt5c")
@@ -263,9 +256,9 @@ texture = ExtResource("1_vkt5c")
 [node name="TitleTexture" type="TextureRect" parent="Background"]
 layout_mode = 1
 offset_left = 25.0
-offset_top = 20.0
+offset_top = -47.5
 offset_right = 164.0
-offset_bottom = 85.0
+offset_bottom = 17.5
 texture = ExtResource("2_mf2mp")
 
 [node name="Mask" type="TextureRect" parent="Background"]
@@ -275,7 +268,8 @@ anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -125.0
-offset_bottom = 180.0
+offset_top = 180.0
+offset_bottom = 360.0
 grow_horizontal = 0
 texture = ExtResource("3_lk734")
 
@@ -312,9 +306,9 @@ texture = ExtResource("5_nrkp1")
 [node name="SinglePlayerTexture" type="TextureRect" parent="Background"]
 unique_name_in_owner = true
 layout_mode = 1
-offset_left = 35.0
+offset_left = -150.0
 offset_top = 100.0
-offset_right = 177.0
+offset_right = -8.0
 offset_bottom = 121.0
 texture = ExtResource("6_fa0uo")
 stretch_mode = 2
@@ -322,9 +316,9 @@ stretch_mode = 2
 [node name="TwoPlayersTexture" type="TextureRect" parent="Background"]
 unique_name_in_owner = true
 layout_mode = 1
-offset_left = 35.0
+offset_left = -150.0
 offset_top = 125.0
-offset_right = 177.0
+offset_right = -8.00002
 offset_bottom = 146.0
 texture = ExtResource("7_3kkw7")
 stretch_mode = 2

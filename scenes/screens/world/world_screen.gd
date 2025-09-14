@@ -3,15 +3,13 @@ extends Screen
 
 @onready var game_over_timer: Timer = %GameOverTimer
 
-func _enter_tree() -> void:
+func _ready() -> void:
+	#连接到超时信号
+	game_over_timer.timeout.connect(on_transition.bind())
 	#监听游戏事件
 	GameEvents.game_over.connect(on_game_over.bind())
 	#调用游戏裁判重置
 	GameManager.start_game()
-
-func _ready() -> void:
-	#连接到超时信号
-	game_over_timer.timeout.connect(on_transition.bind())
 
 func on_game_over(_winner: String) -> void:
 	#启动计时器

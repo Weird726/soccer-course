@@ -27,6 +27,9 @@ var tournament : Tournament = null
 func _ready() -> void:
 	#初始化比赛
 	tournament = screen_data.tournament
+	#检查当前所处阶段
+	if tournament.current_stage == Tournament.Stage.COMPLETE:
+		MusicPlayer.play_music(MusicPlayer.Music.WIN)
 	#刷新比赛的方法
 	refresh_brackets()
 

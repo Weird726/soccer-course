@@ -18,8 +18,6 @@ var time_left : float
 var time_since_paused := Time.get_ticks_msec()
 
 func _ready() -> void:
-	#将剩余时间设为比赛时长
-	time_left = DURATION_GAME_SEC
 	#监听事件创建回调函数
 	GameEvents.impact_received.connect(on_impact_received.bind())
 
@@ -35,6 +33,8 @@ func _process(_delta: float) -> void:
 
 #重置状态转换方法
 func start_game() -> void:
+	#将剩余时间设为比赛时长
+	time_left = DURATION_GAME_SEC
 	switch_state(State.RESET)
 
 #调用一个默认值就不用修改所有调用此方法的地方

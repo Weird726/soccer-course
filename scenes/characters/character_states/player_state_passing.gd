@@ -29,7 +29,7 @@ func find_teammate_in_view() -> Player:
 	var player_in_view := teammate_detection_area.get_overlapping_bodies()
 	#用于过滤的方法（包括玩家自身）
 	var teammates_in_view := player_in_view.filter(
-		func (p: Player): return p != player
+		func (p: Player): return p != player and p.country == player.country
 	)
 	#自定义排序(接受一个带有两个参数的可调用函数(这是一个数组）
 	teammates_in_view.sort_custom(

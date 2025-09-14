@@ -15,6 +15,8 @@ func set_as_winner(score: String) -> void:
 	score_label.text = score
 	#标签可见性设置为true
 	score_label.visible = true
+	#将边框可见性设置为不可见
+	border.visible = false
 
 #为败者设置的方法，不显示比分
 func set_as_loser() -> void:

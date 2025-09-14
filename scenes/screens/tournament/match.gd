@@ -37,3 +37,11 @@ func update_match_info() -> void:
 	winner = country_home if goals_home > goals_away else country_away
 	#分数显示
 	final_score = "%d - %d" % [max(goals_home, goals_away), min(goals_home, goals_away)]
+
+#解决方案
+func resolve() -> void:
+	#开始循环
+	while  is_tied():
+		goals_home = randi_range(0, 5)
+		goals_away = randi_range(0, 5)
+	update_match_info()

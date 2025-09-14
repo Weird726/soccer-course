@@ -116,3 +116,6 @@ func on_selector_selected() -> void:
 		GameManager.current_match = Match.new(country_p2, country_p1)
 		#可以切换到游戏界面
 		transition_screen(SoccerGame.ScreenType.IN_GAME)
+	else:
+		#切换到锦标赛界面,在创建一个新的锦标赛和传入一些界面数据
+		transition_screen(SoccerGame.ScreenType.TOURNAMENT, ScreenData.build().set_tournament(Tournament.new()))

@@ -26,17 +26,22 @@ var tournament : Tournament = null
 
 func _ready() -> void:
 	#初始化比赛
-	tournament = Tournament.new()
+	tournament = screen_data.tournament
 	#刷新比赛的方法
 	refresh_brackets()
 
 func _process(_delta: float) -> void:
 	#检查是否按下玩家1的射击键
 	if KeyUtils.is_action_just_pressed(Player.ControlScheme.P1, KeyUtils.Action.SHOOT):
-		#进入下一阶段
-		tournament.advance()
-		#刷新对阵表
-		refresh_brackets()
+		#锦标赛当前界面判断
+		if tournament.current_stage < Tournament.Stage.COMPLETE:
+			#如果锦标赛尚未完成，切换到游戏状态
+			transition_screen(SoccerGame.ScreenType.IN_GAME, screen_data)
+		else:
+			#直接返回主菜单
+			transition_screen(SoccerGame.ScreenType.MAIN_MENU)
+		#添加音效
+		SoundPlayer.play(SoundPlayer.Sound.UI_SELECT)
 
 func refresh_brackets() -> void:
 	#刷新单个赛程的方法
